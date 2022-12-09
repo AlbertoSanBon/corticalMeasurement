@@ -70,20 +70,21 @@ def compute_thickness_image(image, contourid=0, grow=False):
     width_matrix.T
         Thickness values.
     """
-    print(contourid)
     thresh = threshold_otsu(image.T)
     binary = image.T > thresh
     skeleton = skeletonize(binary)
     im=binary.astype(np.uint8)*255
-    zeros=binary.astype(np.uint8)*0
+    zeros=(binary.astype(np.uint8)*0).copy()
     contours, hierarchy = cv2.findContours(im, cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)
     if len(contours)!=0 and contourid==-1:
         areas=[cv2.contourArea(c) for c in contours]
         contourid=areas.index(max(areas))
     if len(contours)!=0 and contourid+1<=len(contours):
-        external=cv2.drawContours(zeros, contours, contourid,255,1)      
+        cv2.drawContours(zeros, contours, contourid,255,1) # drawContours modifica zeros
+        external=zeros
     else:
         external=zeros
+
     skeleton=skeleton.astype(np.uint8)*255
     skeleton_inv=invert(skeleton)
     sdf=cv2.distanceTransform(skeleton_inv, cv2.DIST_L2, 3)
@@ -157,6 +158,7 @@ logger.addHandler(fh)
 # GET THICKNESS #
 #################
 path = "G:/DICOM STLs/"
+path = "C:/Users/lfsanchez/OneDrive - Universidad Pontificia Comillas/COMILLAS/Workspace/dicom/data/stl high res/"
 
 # Obtain references vectors from the reference bone. Reference -> r
 #if reference_bone == data_path:
@@ -402,7 +404,7 @@ show_cuts_position(cortesG, num_viewsG, G, poly_data_r, bounds_r, spacing_n)
 
 #Select the STL generated
 reader_c = vtk.vtkSTLReader()
-reader_c.SetFileName(path+"leg9.stl")
+reader_c.SetFileName(path+"femur1Der.stl")
 reader_c.Update()
 
 # Extract Poly data
