@@ -15,6 +15,7 @@ Load all DICOM images from a folder and return a list with their metadata for ma
 ----------
 path : string
     Path to the directory with the dicom images.
+	
 files : list
     List with the images.
 
@@ -65,16 +66,22 @@ Show a subplot of images
 ----------
 stack : array
     Numpy array of dimensions (num, resolution_x, resolution_y).
+	
 rows : int, optional
     Number of rows of the subplot. The default is 11.
+	
 cols : int, optional
     Number of columns of the subplot. The default is 10.
+	
 start_with : int, optional
     Image with which the subplot starts. The default is 1.
+	
 show_every : int, optional
     The subplot shows one image every this number. The default is 7.
+	
 color : boolean, optional
     If is True, shows de color of the labels in the image. The default is False.
+	
 cmap : string, optional
     The default is None.
 
@@ -97,8 +104,10 @@ In order to display the CT in 3D isometric, and also to compare between differen
 ----------
 image : array of int16
     Numpy matrix with the Hounsfield Units.
+	
 scan : list
     List with the metadata of the images. The return of load_scan function.
+	
 new_spacing : array, optional
     spacing that will be applied. The default is [1,1,1].
 
@@ -106,6 +115,7 @@ new_spacing : array, optional
 -------
 image : array
     Numpy matrix generated after doing the resample.
+	
 new_spacing : array
     The spacing applied.
 
@@ -130,10 +140,13 @@ Auto-detect the boundaries surrounding a volume of interest.
 ----------
 img : array
     One image of the numpy matrix generated after doing the resample.
+	
 hu : boolean, optional
     True if input image is RGB. The default is True.
+	
 threshold : int, optional
     Threshold parameter for the bounding box detection. The default is 200.
+	
 display : boolean, optional
     Plot or not the bounding box in the image. The default is True.
 
@@ -141,10 +154,13 @@ display : boolean, optional
 -------
 (x,y) : tuple
     Coordinate x and y of the bounding box.
+	
 (x+w, y+h): tuple
     Coordinates X and Y of the bounding boxes.
+	
 w : float
     Width of the bounding box.
+	
 h : float
     Height of the bounding box.
 
@@ -170,19 +186,26 @@ Show a subplot of images with the bounding box detection.
 ----------
 img : array
     Numpy array to show their bounding box, of dimensions (num, resolution_x, resolution_y).
+	
 hu : boolean, optional
     True if input image is RGB. The default is True.
+	
 show_box : boolean, optional
     If it is True, plot full ressolution with bounding box. The default is True.
     If it is False, plot only content of bounidng box.
+	
 threshold : int, optional
     Threshold parameter of the bounding box detection. The default is 200.
+	
 rows : int, optional
     Number of rows of the subplot. The default is 10.
+	
 cols : int, optional
     Number of columns of the subplot. The default is 10.
+	
 start_with : int, optional
     Image with which the subplot starts. The default is 1.
+	
 show_every : int, optional
     The subplot shows one image every this number. The default is 3.
 
@@ -213,23 +236,31 @@ Obtain the mask, the labels of the mask and the image after applying the mask.
 ----------
 img : array
     Image which will be processed.
+	
 kernel_preErosion : list
     Size of the kernel to delete some artefacts.
+	
 kernel_firstDilation : list
     Size of the kernel in the first dilation.
+	
 kernel_firstErosion : list
     Size of the kernel in the first erosion.
+	
 hu : True, optional
     True if input image is RGB. The default is True.
+	
 threshold : int, optional
     Threshold parameter of the bounding box detection. The default is 200.
+	
 display : boolean, optional
     If it is True, plot the result of applying the make_bonesmask function in one image. The default is False.
+	
 extract : list, optional
     Select the label of the bone to be extracted.
     It only makes sense if you use the threshold > 200 because then the code extracts several bones.
     If we use threshold < 50 then the code ectracts large organs like the leg, and there are usualy not several labels of interest.
     The default is [].
+	
 size : int, optional
     Erosion and dilation kernel size.
     With the spacing [1,1,1] is usually size = 16.
@@ -242,10 +273,13 @@ size : int, optional
 -------
 mask : array
     Mask of the input image generated.
+	
 mask*img : array
     Result of applying the mask in the input img.
+	
 mask*img_org : array
     Result of applying the mask in a copy of the input img.
+	
 new_label_norm : array
     Labels in which the mask generated is divided.
 
@@ -268,12 +302,16 @@ Applies to imageData a gaussian filter and a smoother to generate the figure as 
 ----------
 imageData : vtk
     .
+	
 ThrIn : int
     Lower limit of the range of values.
+	
 ThrOut : int
     Upper limit of the range of values.
+	
 color : string, optional
     Color of the tissue map. The default is "skeleton".
+	
 isoValue : float, optional
     Value of the surface at a HU level compressed between 0 and 255. The default is 127.5.
 
@@ -281,6 +319,7 @@ isoValue : float, optional
 -------
 actor : vtk
     Figure of the 3D visualization.
+	
 stripper : vtk
     .
 
@@ -328,8 +367,10 @@ Calculate the thickness of the contour selected with the contourid
 ----------
 image : array
     Image of which we want to compute the thickness.
+	
 contourid : int, optional
     Is the index of the contour. If it is '-1', corresponds to the contour with largest area . The default is 0.
+	
 grow : boolean, optional
     If it is True, increase the size of contour. Only for visual purpose.
     The default is False.
@@ -338,10 +379,13 @@ grow : boolean, optional
 -------
 contourid : int
     Return the index of the contour with largest area.
+	
 contours : tuple
     Contour coordinates.
+	
 external.T
     Binary images with contour.
+	
 width_matrix.T
     Thickness values.
 
@@ -363,13 +407,16 @@ Convert the value of thickness of the slice into a 1D measure.
 ----------
 array_coordinates : list
     List with contour coordinates returned by compute_thickness_image.
+	
 array_thickness : list
     List with thickness values on the form of an image returned by compute_thickness_image.
+	
 countour_index : list, optional
     Select the contour id:
         For only one bone in the dicom, contourID will be surely:0
         For two bones in the dicom, contourID could be :0 for the smallest and 2 for the largest
         If countour_index is a list, then is a list with the contourID  used for each slide (obtained runing compute_thickness_image when contourid=-1). This list have the contour ID or -1 if no contours where detected
+		
 reference_x : int, optional
     Point in the slides to take the reference for the 2D->1D conversion.
     The default is 100.
@@ -393,12 +440,16 @@ Represent in the 3D model the height of the slices of which the thickness has be
 ----------
 cortesG : list
     Array with slices whose thickness has been represented.
+	
 num_views : int
     Number of cuts.
+	
 G : tuple
     Center of mass of the bone to set the center of mass cut.
+	
 poly_data : vtkPolyData
     Poly data of the stl generated.
+	
 bounds : tuple
     Bounds of the poly data to set origin and points of the cuts.
 
@@ -422,12 +473,16 @@ Represent in the 3D model the height of the slices of which the thickness has be
 ----------
 cortesG : list
     Array with slices whose thickness has been represented.
+	
 num_views : int
     Number of cuts.
+	
 G : tuple
     Center of mass of the bone to set the center of mass cut.
+	
 poly_data : vtkPolyData
     Poly data of the stl generated.
+	
 bounds : tuple
     Bounds of the poly data to set origin and points of the cuts.
 
@@ -450,12 +505,16 @@ Represent the sections of the bone that generate the cuts
 ----------
 array_thickness : list
     List with thickness values on the form of an image returned by compute_thickness_image.
+	
 cortesG : list
     Array with slices whose thickness has been represented.
+	
 num_views : int
     Number of cuts.
+	
 spacing : array
     Spacing to be set in the vtkImageData.
+	
 origin : array
     Origin to be set in the vtkImageData.
 
@@ -478,6 +537,7 @@ Find the rotation matrix that aligns vec1 to vec2
 ----------
 vec1 : array
     A 3d "source" vector.
+	
 vec2 : array
     A 3d "destination" vector.
 
@@ -501,6 +561,7 @@ Detect orientation by using PCA and maximum variance directions.
 ----------
 image : array
     Slice that corresponds to the bone center of mass.
+	
 represent : boolean, optional
     If it is True, represent the slice with the main vector of orientation.
     The default is False.
@@ -529,14 +590,18 @@ Obtain the main orientation vector with the principal component.
 ----------
 pts : int
     Index of the contour with max area.
+	
 img : array
     Slice in question.
+	
 arrowsize : float
     Size of the array.
     The default is 3.
+	
 textsize : float
     Size of the text.
     The default is 0.3.
+	
 textcoord : array
     Coordinates of the text.
     The default is None.
@@ -561,12 +626,16 @@ Draw the arrows of the main vector in the image.
 ----------
 img : array
     Slice on which to draw the arrow.
+	
 p_ : tuple
     Center of the image.
+	
 q_ : Tuple
     Point of the vector.
+	
 color : tuple
     Color to show the vector.
+	
 scale : int
     Scale of the draw.
 
@@ -598,12 +667,16 @@ Note that:
 ----------
 kDTree : vtk object
     vtkKdTree object of vtkmodules.vtkCommonDataModel module.
+	
 thickness : vtkImageData
     Coordinates of closest point in thickness array.
+	
 thickness_values : vtkFloatArray
     Thinkness value of closest point in thickness array.
+	
 ccenter : list
     Center of the cell (triangle).
+	
 radius : float, optional
     Radius to locate the nearby voxels of the points. The default is 0.5.
 
@@ -611,8 +684,10 @@ radius : float, optional
 -------
 ids : int
     .
+	
 distances[index] : float
     distance value.
+	
 thicknesses[index] : float
     thick value to color the 3D model.
 
@@ -631,10 +706,13 @@ Represent a 3D model colored based on the thickness value.
 ----------
 array_thickness : list
     Color images with thickness.
+	
 spacing_n : list
     Spacing of the whiteImage.
+	
 origin : list
     Origin of the whiteImage.
+	
 imgstenc : vtkImageStencil
     .
 
@@ -678,8 +756,10 @@ Write the render window view to an image file.
 ----------
 fileName : string
     The file name, if no extension then PNG is assumed.
+	
 renWin : vtk Render window
     The render window.
+	
 rgba : TYPE, optional
      Used to set the buffer type.
      The default is True.
@@ -708,6 +788,7 @@ Sort contours left to right
 ----------
 cnts : tuple
     contours of the slice.
+	
 method : string, optional
     Method to sort the contours.
     The default is "left-to-right".
@@ -716,6 +797,7 @@ method : string, optional
 -------
 cnts : tuple
     Contours sorted left to right.
+	
 boundingBoxes : TYPE
     DESCRIPTION.
 
