@@ -76,9 +76,9 @@ To replicate the results provided in the article, run those steps:
 2. Use this values in the configuration file:
 
 		[dicom]
-		data_path_dicom = C:/...
-		output_path = C:/...
-		resources_path = C:/...
+		data_path_dicom = C:/corticalMeasurement/data
+		output_path = C:/corticalMeasurement/output
+		resources_path = C:/corticalMeasurement/resources
 
 		[pre-process]
 		spacing = [0.5,0.25,0.25]
@@ -98,11 +98,11 @@ To replicate the results provided in the article, run those steps:
 		num_views_thickness = 9
 
 		[all dicom]
-		reference_bone = C:/...
+		reference_bone = C:/corticalMeasurement/data/boneA
 
 		[reference vectors]
-		orientation_vector = [0.6589270872271564, 0.7522068157882746]
-		alignment_vector = [0.08735337108373642, 0.0930023342370987, 0.991826593875885]
+		orientation_vector = 
+		alignment_vector = 
 
 3. Run PYTHON code:
 4. Review LOG file
