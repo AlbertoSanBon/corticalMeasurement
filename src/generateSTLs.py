@@ -15,7 +15,7 @@ import math
 from scipy.ndimage import rotate
 import vg
 
-from libs.libraries import load_scan, get_pixels_hu, sample_stack, resample, find_bounding_box, find_bounding_box_sample_stack, make_bonesmask, CreateTissueFromArray, CreateTissueMap, CreateLut, compute_thickness_image, convertTo1D, show_cuts, show_cuts_position, rotation_matrix_from_vectors, orientation_slice, getOrientationMainVector, drawAxis, getClosestPointInRadius, color3DModelWithThickness, getArea, show_cuts_position_restored, WriteImage
+from config.libraries import load_scan, get_pixels_hu, sample_stack, resample, find_bounding_box, find_bounding_box_sample_stack, make_bonesmask, CreateTissueFromArray, CreateTissueMap, CreateLut, compute_thickness_image, convertTo1D, show_cuts, show_cuts_position, rotation_matrix_from_vectors, orientation_slice, getOrientationMainVector, drawAxis, getClosestPointInRadius, color3DModelWithThickness, getArea, show_cuts_position_restored, WriteImage
 
 import configparser
 
@@ -28,7 +28,7 @@ import configparser
 config = configparser.RawConfigParser()
 
 # parse existing file
-config.read('../config/file.ini')
+config.read('./config/file.ini')
 
 # read values from a section
 output_path = config.get('dicom', 'output_path')
@@ -164,6 +164,8 @@ for i in onlyfiles_dicom:
     
     # Calculate size for the spacing used. Reference 0.5 --> size=30
     auto_size = int(0.5*30/spacing[1])
+    if size <= auto_size-5 or size >= auto_size+5:
+        size=auto_size
     
     # Arrays in which the results of make_bonesmask function will be stored
     masked_bones= []
@@ -174,7 +176,7 @@ for i in onlyfiles_dicom:
     # Obtain masked bones, masks and labels of the masks
     counter=0
     for img in tqdm(imgs_after_resamp):
-        mascara,imagen_norm,imagen_hu,etiquetas=make_bonesmask(img, kernel_preErosion, kernel_firstDilation, kernel_firstErosion, hu=True, threshold=threshold, display=False, extract=extract, size=auto_size)
+        mascara,imagen_norm,imagen_hu,etiquetas=make_bonesmask(img, kernel_preErosion, kernel_firstDilation, kernel_firstErosion, hu=True, threshold=threshold, display=False, extract=extract, size=size)
         masked_bones.append(imagen_norm)
         masked_bones_hu.append(imagen_hu)
         masks.append(mascara)
