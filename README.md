@@ -78,9 +78,9 @@ To replicate the results provided in the article, run those steps:
 2. Use this values in the configuration file:
 
 		[dicom]
-		data_path_dicom = C:/corticalMeasurement/data
-		output_path = C:/corticalMeasurement/output
-		resources_path = C:/corticalMeasurement/resources
+		data_path_dicom = C:/corticalMeasurement/data/
+		output_path = C:/corticalMeasurement/output/
+		resources_path = C:/corticalMeasurement/resources/
 
 		[pre-process]
 		spacing = [0.5,0.25,0.25]
