@@ -10,6 +10,8 @@ To achieve this, classical morphological and segmentation techniques are used to
 
 Measuring cortical thickness would enable accurate traumatological surgeries and the study of structural properties. Obtaining thickness profiles of a vast number of patients can open the door to various studies aimed at identifying patterns between bone thickness and patients' medical, social, or demographic variables.
 
+![alt text](docs/images/paper.png)
+
 # Data:
 
 In the DATA folder, there are two sets of CT images used in the article to evaluate the performance of the code provided in this repository. The rest of the images cannot be shared due to confidentiality reasons. If any researcher is interested in replicating the article's results with the same dataset, they can proceed after signing the appropriate confidentiality agreements with the authors of the paper.
