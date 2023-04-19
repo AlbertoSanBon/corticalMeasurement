@@ -60,7 +60,8 @@ This section configures all the paths:
 
 #### retake
 
-- ??????
+- legX. the same name of the stl file of which you want to perfrom the retake. Two boolean values required. 0: no correction. 1: yes correction. First value is for change leg (right leg and you need it to be left or vice versa) and the second for correct the direction (pca pointing to contrary direction). For example, if the bone 4 belongs to the opposite leg to the reference one but the PCA component is okey, the structure will be: leg4 = 1,0
+
 
 # Api Reference
 
