@@ -10,6 +10,15 @@
 
 ### 2. Understand repo folders:
 
+The repository is structured in 6 folders:
+
+* config - contains configuration file
+* data - contains two datasets to test the code
+* docs - contains this guide and the API reference
+* libs - contain the library required for the code to run
+* logs - folder that will store the application traces
+* src - folde that contains the python scripts
+
 <p align="center">
   <img src="images/step2.png" alt=""/>
 </p>
