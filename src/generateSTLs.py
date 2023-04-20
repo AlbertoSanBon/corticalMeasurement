@@ -13,7 +13,7 @@ from vlogging import VisualRecord
 import cv2
 import math
 from scipy.ndimage import rotate
-import vg
+# import vg
 
 import sys
 sys.path.append("../libs")
@@ -125,7 +125,7 @@ for i in onlyfiles_dicom:
     plt.hist(imgs_to_process.flatten(), bins=50, color='c')
     plt.xlabel("Hounsfield Units (HU)")
     plt.ylabel("Frequency")
-    plt.show()
+    #plt.show()
     plt.savefig(resources_path+'Histogram.png')
     cv_histogram = cv2.imread(resources_path+'Histogram.png')
     logger.debug(VisualRecord("Histogram", cv_histogram, fmt="png"))
