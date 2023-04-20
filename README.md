@@ -108,6 +108,8 @@ To replicate the results provided in the article, run those steps:
 		[reference vectors]
 		orientation_vector = 
 		alignment_vector = 
+		
+		[retake]
 
 3. Download from data section both TACS, TAC A and TAC B, and insert both on the route established in data_path_dicom 
 4. Run PYTHON code:
