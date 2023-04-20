@@ -8,7 +8,13 @@
   <img src="images/step1.png" alt=""/>
 </p>
 
-### 2. Setup configuration file:
+### 2. Understand repo folders:
+
+<p align="center">
+  <img src="images/step2.png" alt=""/>
+</p>
+
+### 3. Setup configuration file:
 
 Before starting, write in config/file.ini the following parameters. Visite the entry [README](../README.md) file for details of each parameter:
 
