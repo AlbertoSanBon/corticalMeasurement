@@ -10,6 +10,8 @@ To achieve this, classical morphological and segmentation techniques are used to
 
 Measuring cortical thickness would enable accurate traumatological surgeries and the study of structural properties. Obtaining thickness profiles of a vast number of patients can open the door to various studies aimed at identifying patterns between bone thickness and patients' medical, social, or demographic variables.
 
+
+
 # Data:
 
 In the DATA folder, there are two sets of CT images used in the article to evaluate the performance of the code provided in this repository. The rest of the images cannot be shared due to confidentiality reasons. If any researcher is interested in replicating the article's results with the same dataset, they can proceed after signing the appropriate confidentiality agreements with the authors of the paper.
@@ -30,7 +32,7 @@ This section configures all the paths:
 - spacing. Milimeters per slice and milimeters per pixel. Used to sample all the datasets at the same resolution. Default value: [0.5,0.25,0.25]
 - threshold. Segmentation parameter. Set to 50 to extract the whole leg. To extract isolated bones, use higher values around 210, but it is more instable. It can be modified but first execution is recommended to be left to 50.
 - extract. List of segmented elements IDs to extract. If empty, it extracts the largest element. In our case, the tibiae. 
-- size. Main erosion and dilation kernel size. With spacing [0.5, 0.25, 0.25] it is set to 60. When the X and Y sampling rate is different, kernel size is updated authomatically. It can be provided but first execution is recommended not to be toched.
+- size. Main erosion and dilation kernel size. With spacing [0.5, 0.25, 0.25] it is set to 60. When the X and Y sampling rate is different, kernel size is updated authomatically. It can be provided but first execution is recommended not to be toched. If a different value is provided it will override the automated kernel size.
 - kernel_preerosion. Smoothing and hole filling operators. It can be modified but first execution is recommended to be left to [1,1]
 - kernel_firstdilation. Smoothing and hole filling operators. It can be modified but first execution is recommended to be left to [7,7]
 - kernel_firsterosion. Smoothing and hole filling operators. It can be modified but first execution is recommended to be left to [6,6]
