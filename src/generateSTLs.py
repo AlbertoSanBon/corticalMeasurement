@@ -89,7 +89,7 @@ for i in onlyfiles_dicom:
     # Increase the value to identify the bone
     id+=1
     
-    logger.debug(VisualRecord(">>> BONE FROM: %s" %(i)+", BONE SAVED :leg_%s " %(id)))
+    logger.debug(VisualRecord(">>> BONE FROM: %s" %(i) + ", BONE SAVED :leg%d " %(id)))
     
     # Path of slices
     data_path = data_path_dicom+i
