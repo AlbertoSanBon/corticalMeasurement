@@ -49,7 +49,7 @@ if 'reference vectors' not in config:
 ##########################
 
 logger = logging.getLogger("demo")
-fh = FileHandler('referenceBone_toColor.html', mode="w")
+fh = FileHandler('../logs/referenceBone.html', mode="w")
 
 formatter = logging.Formatter('%(asctime)s | %(levelname)s | %(message)s', '%m-%d-%Y %H:%M:%S')
 fh.setFormatter(formatter)
