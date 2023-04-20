@@ -57,8 +57,8 @@ This section configures all the paths:
 
 #### reference vectors
 
-- orientation_vector. If no reference bone is provided, an orientation vector can be selected. Only two coordinates (X and Y) are required
-- alignment_vector . If no reference bone is provided, an alighment vector can be selected. Three spacial coordinates are required. For instance [0,0,1] to be aligned against the Z axis.
+- orientation_vector. Those parameters are filled out after the execution of the script referencBone.py. Only two coordinates (X and Y) are required. User doesn't need to provide a value
+- alignment_vector . Those parameters are filled out after the execution of the script referencBone.py. Three spacial coordinates are required (X,Y,Z). For instance [0,0,1] to be aligned against the Z axis. User doesn't need to provide a value
 
 #### retake
 
@@ -103,7 +103,7 @@ To replicate the results provided in the article, run those steps:
 		num_views_thickness = 9
 
 		[all dicom]
-		reference_bone = C:/corticalMeasurement/data/boneA
+		reference_bone = C:/corticalMeasurement/data/TAC A
 
 		[reference vectors]
 		orientation_vector = 

@@ -1,4 +1,5 @@
 Before starting, write in config/file.ini the following parameters:
+
 	- data_path_dicom --> path to the directory with DICOM files.
 	- reference_bone --> path to the reference bone.
 	- output_path  --> path to the directory in which STL files will be save.
