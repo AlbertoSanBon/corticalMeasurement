@@ -2,6 +2,8 @@
 
 If any researcher is interested in replicating the article's results with the same dataset, they can proceed after signing the appropriate confidentiality agreements with the authors of the paper.
 
+The figures shown in this file are not aligned or oriented against any reference. They are represented in their original references.
+
 ## Tac A
 
 Chosing 11 profiles equally distributed:
