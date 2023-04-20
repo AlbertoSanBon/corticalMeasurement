@@ -196,7 +196,7 @@ plt.subplot(1,2,1)
 plt.imshow(image)
 plt.subplot(1,2,2)
 plt.imshow(image_rgb)
-plt.show()
+#plt.show()
 plt.savefig(resources_path+"RefOrientationV.png")
 cv_refOr = cv.imread(resources_path+"RefOrientationV.png")
 resized = cv.resize(cv_refOr, (350,350), interpolation = cv.INTER_AREA)
@@ -208,7 +208,7 @@ print("main ORIENTING REFERENCE: ", vector1pca)
 config.set('reference vectors', 'orientation_vector', [vector1pca[0], vector1pca[1]])
 
 # Writing our configuration file to 'config/file.ini'
-with open('config/file.ini', 'w') as configfile:
+with open('../config/file.ini', 'w') as configfile:
     config.write(configfile)
     
 
@@ -252,7 +252,7 @@ print("main ALIGNING REFERENCE: ", vector1normal)
 config.set('reference vectors', 'alignment_vector', [vector1normal[0], vector1normal[1], vector1normal[2]])
 
 # Writing our configuration file to 'config/file.ini'
-with open('config/file.ini', 'w') as configfile:
+with open('../config/file.ini', 'w') as configfile:
     config.write(configfile)
     
     
@@ -296,7 +296,7 @@ for i in range (1,num_views+1):
         cortes.append(keys[delta*i])
     plt.title("Slice: "+str(keys[delta*i]))
 fig.suptitle('1D Thickness Contours')
-plt.show()
+#plt.show()
 plt.savefig(resources_path+"Thickness.png")
 cv_thickness = cv.imread(resources_path+"Thickness.png")
 resized = cv.resize(cv_thickness, (500,500), interpolation = cv.INTER_AREA)
