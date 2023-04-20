@@ -302,7 +302,7 @@ for opt in config[section]:
     ax.axes.set_xlim3d(left=-1, right=1) 
     ax.axes.set_ylim3d(bottom=-1, top=1) 
     ax.axes.set_zlim3d(bottom=-1, top=1) 
-    plt.show()
+    #plt.show()
     
     #Create the rotation matrix
     from_vector=vector2normal
@@ -491,7 +491,7 @@ for opt in config[section]:
     plt.imshow(image2)
     plt.subplot(1,2,2)
     plt.imshow(image_rgb2)
-    plt.show()
+    #plt.show()
     plt.savefig(resources_path+"OrientationV.png")
     cv_OrV = cv.imread(resources_path+"OrientationV.png")
     resized = cv.resize(cv_OrV, (450,350), interpolation = cv.INTER_AREA)
@@ -524,7 +524,7 @@ for opt in config[section]:
     plt.subplot(1,3,3)
     plt.imshow(image_restored)
     plt.title("Leg 2 Corrected")
-    plt.show()
+    #plt.show()
     plt.savefig(resources_path+"cOr.png")
     cv_cOr = cv.imread(resources_path+"cOr.png")
     resized = cv.resize(cv_cOr, (450,350), interpolation = cv.INTER_AREA)
@@ -838,7 +838,7 @@ for opt in config[section]:
     plt.imshow(image2aligned_oriented)
     plt.subplot(1,2,2)
     plt.imshow(image_rgb2aligned_oriented)
-    plt.show()
+    #plt.show()
     plt.savefig(resources_path+"pcaF.png")
     cv_pcaF = cv.imread(resources_path+"pcaF.png")
     resized = cv.resize(cv_pcaF, (450,350), interpolation = cv.INTER_AREA)
@@ -855,7 +855,7 @@ for opt in config[section]:
     plt.subplot(1,3,3)
     plt.imshow(image_final) # COM bone2 after aligning and orienting
     plt.title("Leg 2 Oriented")
-    plt.show()
+    #plt.show()
     plt.savefig(resources_path+"cOrF.png")
     cv_cOrF = cv.imread(resources_path+"cOrF.png")
     resized = cv.resize(cv_cOrF, (450,350), interpolation = cv.INTER_AREA)
@@ -982,7 +982,7 @@ for opt in config[section]:
             cortes.append(keys[delta*i])
         plt.title("Slice: "+str(keys[delta*i]))
     fig.suptitle('1D Thickness Contours')
-    plt.show()
+    #plt.show()
     plt.savefig(resources_path+"Thickness.png")
     cv_thickness = cv.imread(resources_path+"Thickness.png")
     resized = cv.resize(cv_thickness, (500,500), interpolation = cv.INTER_AREA)
