@@ -60,7 +60,7 @@ convert_stl = config.getboolean('post-process', 'convert_stl')
 ##########################
 
 logger = logging.getLogger("generateSTLs")
-fh = FileHandler('..\logs\generateSTLs_toColor.html', mode="w")
+fh = FileHandler('../logs/generateSTLs_toColor.html', mode="w")
 
 formatter = logging.Formatter('%(asctime)s | %(levelname)s | %(message)s', '%m-%d-%Y %H:%M:%S')
 fh.setFormatter(formatter)
