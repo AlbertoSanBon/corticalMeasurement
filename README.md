@@ -27,42 +27,44 @@ All the configuration is centralized in the file.ini in the "config" folder. Tha
 #### dicom
 This section configures all the paths:
 
-- data_path_dicom. Folder with the CT images sets
-- output_path. Folder to store STL files
-- resources_path. Temporary folder to assist Visual Logging
+- **data_path_dicom**. Folder with the CT images sets
+- **output_path**. Folder to store STL files
+- **resources_path**. Temporary folder to assist Visual Logging
 
 #### pre-process
 
-- spacing. Milimeters per slice and milimeters per pixel. Used to sample all the datasets at the same resolution. Default value: [0.5,0.25,0.25]
-- threshold. Segmentation parameter. Set to 50 to extract the whole leg. To extract isolated bones, use higher values around 210, but it is more instable. It can be modified but first execution is recommended to be left to 50.
-- extract. List of segmented elements IDs to extract. If empty, it extracts the largest element. In our case, the tibiae. 
-- size. Main erosion and dilation kernel size. With spacing [0.5, 0.25, 0.25] it is set to 60. When the X and Y sampling rate is different, kernel size is updated authomatically. It can be provided but first execution is recommended not to be toched. If a different value is provided it will override the automated kernel size.
-- kernel_preerosion. Smoothing and hole filling operators. It can be modified but first execution is recommended to be left to [1,1]
-- kernel_firstdilation. Smoothing and hole filling operators. It can be modified but first execution is recommended to be left to [7,7]
-- kernel_firsterosion. Smoothing and hole filling operators. It can be modified but first execution is recommended to be left to [6,6]
+- **spacing**. Milimeters per slice and milimeters per pixel. Used to sample all the datasets at the same resolution. Default value: [0.5,0.25,0.25]
+- **threshold**. Segmentation parameter. Set to 50 to extract the whole leg. To extract isolated bones, use higher values around 210, but it is more instable. It can be modified but first execution is recommended to be left to 50.
+- **extract**. List of segmented elements IDs to extract. If empty, it extracts the largest element. In our case, the tibiae. 
+- **size**. Main erosion and dilation kernel size. With spacing [0.5, 0.25, 0.25] it is set to 60. When the X and Y sampling rate is different, kernel size is updated authomatically. It can be provided but first execution is recommended not to be toched. If a different value is provided it will override the automated kernel size.
+- **kernel_preerosion**. Smoothing and hole filling operators. It can be modified but first execution is recommended to be left to [1,1]
+- **kernel_firstdilation**. Smoothing and hole filling operators. It can be modified but first execution is recommended to be left to [7,7]
+- **kernel_firsterosion**. Smoothing and hole filling operators. It can be modified but first execution is recommended to be left to [6,6]
 
 #### post-process
 
-- threshold_between_min. Lower bound of the HU units to be filtered. It can be modified but first execution is recommended to be left to 250 for cortical detection
-- threshold_between_max. Upper bound of the HU units to be filtered. It rarely needs to be modified from 2000
-- convert_stl. Boolean variable that indicates if STL needs to be generated or not.
+- **threshold_between_min**. Lower bound of the HU units to be filtered. It can be modified but first execution is recommended to be left to 250 for cortical detection
+- **threshold_between_max**. Upper bound of the HU units to be filtered. It rarely needs to be modified from 2000
+- **convert_stl**. Boolean variable that indicates if STL needs to be generated or not.
 
 #### thickness
 
-- num_views_thickness. If 1D thickness permiter profiles are desired, this variables set the number of those profiles. The main profile is captured in the Center of Mass, and the rest are extracted equidistantly from it.
+- **num_views_thickness**. If 1D thickness permiter profiles are desired, this variables set the number of those profiles. The main profile is captured in the Center of Mass, and the rest are extracted equidistantly from it.
 
 #### all dicom
 
-- reference_bone. It the CT bones are desired to be aligned and oriented against a reference bone, this variable sets the PATH to its DICOM files
+- **reference_bone**. It the CT bones are desired to be aligned and oriented against a reference bone, this variable sets the PATH to its DICOM files
 
 #### reference vectors
 
-- orientation_vector. Those parameters are filled out after the execution of the script referencBone.py. Only two coordinates (X and Y) are required. User doesn't need to provide a value
-- alignment_vector . Those parameters are filled out after the execution of the script referencBone.py. Three spacial coordinates are required (X,Y,Z). For instance [0,0,1] to be aligned against the Z axis. User doesn't need to provide a value
+- **orientation_vector**. This parameter is filled out after the execution of the script referencBone.py. Only two coordinates (X and Y) are required. The rest of the bones will orient against this reference. User doesn't need to provide a value
+- **alignment_vector** . This parameter is filled out after the execution of the script referencBone.py. Three spacial coordinates are required (X,Y,Z). The rest of the bones will align against this reference. For instance [0,0,1] to be aligned against the Z axis. User doesn't need to provide a value
 
-#### retake
+#### retake (apply corrections)
 
-- legX. the same name of the stl file of which you want to perfrom the retake. Two boolean values required. 0: no correction. 1: yes correction. First value is for change leg (right leg and you need it to be left or vice versa) and the second for correct the direction (pca pointing to contrary direction). For example, if the bone 4 belongs to the opposite leg than the reference one but the PCA component is okey, the structure will be: leg4 = 1,0
+- **legX**. The X of this parameter is the ID assiged by the application and can be retrived from the log file and it indentifies the bone to be re-executed to apply some corrections. It indicates two possible corrections. Its value is a tuple of two binary values meaning no correction (0) or correction required (1). The first element of the tuple is for changing the leg side (if the reference bone is from the left side and the bone to be computed is from the right side). The second element is to fix the PCA main variance direction (check paper for more details). For example, if the bone 4 needs to be applyed the side correction but not the PCA correction, then this parameter would look like this: 
+
+	leg4 = 1,0
 
 
 # Api Reference
@@ -78,7 +80,7 @@ A user guide can be found in USERGuide file from "docs" folder.
 To replicate the results provided in the article, run those steps:
 
 1. Clone repository
-2. Use this values in the configuration file:
+2. Use this configuration file updating the paths according to the cloning path:
 
 		[dicom]
 		data_path_dicom = C:/corticalMeasurement/data/
@@ -112,7 +114,6 @@ To replicate the results provided in the article, run those steps:
 		[retake]
 		
 
-3. Download from data section both TACS, TAC A and TAC B, and insert both on the route established in data_path_dicom 
 4. Run PYTHON code:
 5. Review LOG file
 
