@@ -2,6 +2,8 @@
 
 
 [API Reference](API-Reference.md)
+[Google](https://google.com)
+[API Reference](../README.md)
 
 
 Before starting, write in config/file.ini the following parameters:
