@@ -58,7 +58,7 @@ vector1normal = json.loads(vector1normal)
 ##########################
 
 logger = logging.getLogger("demo2")
-fh = FileHandler('..\logs\Dcorrections&Thickness_toColor.html', mode="w")
+fh = FileHandler('../logs/corrections&Thickness.html', mode="w")
 
 formatter = logging.Formatter('%(asctime)s | %(levelname)s | %(message)s', '%m-%d-%Y %H:%M:%S')
 fh.setFormatter(formatter)

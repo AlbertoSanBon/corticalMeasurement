@@ -109,7 +109,7 @@ To replicate the results provided in the article, run those steps:
 		orientation_vector = 
 		alignment_vector = 
 
-3. Download from data section both TACS, TAC 7 and TAC 9, and insert both on the route established in data_path_dicom 
+3. Download from data section both TACS, TAC A and TAC B, and insert both on the route established in data_path_dicom 
 4. Run PYTHON code:
 5. Review LOG file
 

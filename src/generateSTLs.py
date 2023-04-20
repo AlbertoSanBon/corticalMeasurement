@@ -60,7 +60,7 @@ convert_stl = config.getboolean('post-process', 'convert_stl')
 ##########################
 
 logger = logging.getLogger("generateSTLs")
-fh = FileHandler('..\logs\generateSTLs_toColor.html', mode="w")
+fh = FileHandler('../logs/generateSTLs.html', mode="w")
 
 formatter = logging.Formatter('%(asctime)s | %(levelname)s | %(message)s', '%m-%d-%Y %H:%M:%S')
 fh.setFormatter(formatter)
@@ -88,6 +88,8 @@ for i in onlyfiles_dicom:
     
     # Increase the value to identify the bone
     id+=1
+    
+    logger.debug(VisualRecord(">>> BONE FROM: %s" %(i)+", BONE SAVED :leg_%s " %(id)))
     
     # Path of slices
     data_path = data_path_dicom+i
