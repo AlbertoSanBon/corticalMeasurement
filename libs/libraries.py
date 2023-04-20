@@ -146,7 +146,7 @@ def sample_stack(stack, rows=11, cols=10, start_with=1, show_every=7, color=Fals
                     ax[i,j].imshow(stack[ind],cmap='gray')
                 ax[i,j].axis('off')
                 count+=1
-        plt.show()
+        #plt.show()
         #plt.savefig("Sample_stack.png")
         print("Elapsed time: {} sec.".format(time.time()-t)) 
     except:
@@ -169,7 +169,7 @@ def sample_stack(stack, rows=11, cols=10, start_with=1, show_every=7, color=Fals
                     ax[i,j].imshow(stack[ind],cmap='gray')
                 ax[i,j].axis('off')
                 count+=1
-        plt.show()
+        #plt.show()
         #plt.savefig("Sample_stack.png")
         print("Elapsed time: {} sec.".format(time.time()-t)) 
 def resample(image, scan, new_spacing=[1,1,1]):
@@ -263,7 +263,7 @@ def find_bounding_box(img, hu=True,threshold=200, display=True, sizex=5, sizey=5
         rect = patches.Rectangle((x, y), w, h, linewidth=linewidth, edgecolor='g', facecolor='none')
         ax[0].add_patch(rect)
         ax[1].imshow(middle, cmap='gray')
-        plt.show()
+        #plt.show()
     
     return (x,y),(x+w,y+h),w, h
 
@@ -321,7 +321,7 @@ def find_bounding_box_sample_stack(img, hu=True, show_box=True, threshold=200, r
                 ax[i,j].imshow(middle, cmap='gray')
             ax[i,j].axis('off')
             count+=1
-    plt.show()
+    #plt.show()
     print("Elapsed time: {} sec.".format(time.time()-t))  
     
 def make_bonesmask(img, kernel_preErosion, kernel_firstDilation, kernel_firstErosion, hu=True, threshold=200, display=False, extract=[], size=60, areamin=None):
@@ -523,7 +523,7 @@ def make_bonesmask(img, kernel_preErosion, kernel_firstDilation, kernel_firstEro
         ax[1, 3].imshow(mask*img, cmap='gray')
         ax[1, 3].axis('off')
         
-        plt.show()
+        #plt.show()
     return mask, mask*img, mask*img_org, new_label_norm
 
 def CreateTissueFromArray(imageData, ThrIn, ThrOut, color = "skeleton", isoValue = 127.5):
@@ -1056,7 +1056,7 @@ def show_cuts(array_thickness, cortesG, num_views, spacing, origin):
     
         except: print("Slice not found")
         
-    plt.show()
+    #plt.show()
     #plt.savefig("Cuts.png")
 
 def rotation_matrix_from_vectors(vec1, vec2):
@@ -1133,7 +1133,7 @@ def orientation_slice(image, represent=False):
         plt.imshow(image)
         plt.subplot(1,2,2)
         plt.imshow(image_rgb)
-        plt.show()
+        #plt.show()
         plt.savefig("Main_vector.png")
     
     return vector
