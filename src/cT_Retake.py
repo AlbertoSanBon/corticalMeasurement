@@ -59,7 +59,7 @@ vector1normal = json.loads(vector1normal)
 ##########################
 
 logger = logging.getLogger("demo2")
-fh = FileHandler('..\logs\cT_Retake_toColor.html', mode="w")
+fh = FileHandler('../logs/cT_Retake_toColor.html', mode="w")
 
 formatter = logging.Formatter('%(asctime)s | %(levelname)s | %(message)s', '%m-%d-%Y %H:%M:%S')
 fh.setFormatter(formatter)
