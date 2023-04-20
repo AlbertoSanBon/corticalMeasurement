@@ -430,7 +430,7 @@ def make_bonesmask(img, kernel_preErosion, kernel_firstDilation, kernel_firstEro
     # too powerful, can bind bones
     # Finally, erode to return the mask to its original size.
     # These images only have values 0 and 1.
-    initial_erosion = morphology.erosion(thresh_img,np.ones([1,1])) # Primera erosión para eliminar artefactos
+    initial_erosion = morphology.erosion(thresh_img,np.ones(kernel_preErosion)) # Primera erosión para eliminar artefactos
     dilation = morphology.dilation(initial_erosion,np.ones(kernel_firstDilation)) # Segunda dilatación para eliminar huecos
     erosion = morphology.erosion(dilation,np.ones(kernel_firstErosion))  # Tercera erosión para recuperar el tamaño normal
 

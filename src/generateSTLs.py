@@ -164,6 +164,8 @@ for i in onlyfiles_dicom:
     
     # Calculate size for the spacing used. Reference 0.5 --> size=30
     auto_size = int(0.5*30/spacing[1])
+    if size <= auto_size-5 or size >= auto_size+5:
+        size=auto_size
     
     # Arrays in which the results of make_bonesmask function will be stored
     masked_bones= []
@@ -174,7 +176,7 @@ for i in onlyfiles_dicom:
     # Obtain masked bones, masks and labels of the masks
     counter=0
     for img in tqdm(imgs_after_resamp):
-        mascara,imagen_norm,imagen_hu,etiquetas=make_bonesmask(img, kernel_preErosion, kernel_firstDilation, kernel_firstErosion, hu=True, threshold=threshold, display=False, extract=extract, size=auto_size)
+        mascara,imagen_norm,imagen_hu,etiquetas=make_bonesmask(img, kernel_preErosion, kernel_firstDilation, kernel_firstErosion, hu=True, threshold=threshold, display=False, extract=extract, size=size)
         masked_bones.append(imagen_norm)
         masked_bones_hu.append(imagen_hu)
         masks.append(mascara)

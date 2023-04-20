@@ -11,6 +11,10 @@ To achieve this, classical morphological and segmentation techniques are used to
 Measuring cortical thickness would enable accurate traumatological surgeries and the study of structural properties. Obtaining thickness profiles of a vast number of patients can open the door to various studies aimed at identifying patterns between bone thickness and patients' medical, social, or demographic variables.
 
 
+<p align="center">
+  <img src="docs/images/paper.png" alt=""/>
+</p>
+
 
 # Data:
 
@@ -58,7 +62,8 @@ This section configures all the paths:
 
 #### retake
 
-- ??????
+- legX. the same name of the stl file of which you want to perfrom the retake. Two boolean values required. 0: no correction. 1: yes correction. First value is for change leg (right leg and you need it to be left or vice versa) and the second for correct the direction (pca pointing to contrary direction). For example, if the bone 4 belongs to the opposite leg than the reference one but the PCA component is okey, the structure will be: leg4 = 1,0
+
 
 # Api Reference
 
@@ -76,9 +81,9 @@ To replicate the results provided in the article, run those steps:
 2. Use this values in the configuration file:
 
 		[dicom]
-		data_path_dicom = C:/corticalMeasurement/data
-		output_path = C:/corticalMeasurement/output
-		resources_path = C:/corticalMeasurement/resources
+		data_path_dicom = C:/corticalMeasurement/data/
+		output_path = C:/corticalMeasurement/output/
+		resources_path = C:/corticalMeasurement/resources/
 
 		[pre-process]
 		spacing = [0.5,0.25,0.25]
@@ -104,8 +109,9 @@ To replicate the results provided in the article, run those steps:
 		orientation_vector = 
 		alignment_vector = 
 
-3. Run PYTHON code:
-4. Review LOG file
+3. Download from data section both TACS, TAC 7 and TAC 9, and insert both on the route established in data_path_dicom 
+4. Run PYTHON code:
+5. Review LOG file
 
 
 # Dependences:
