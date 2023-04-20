@@ -1,27 +1,42 @@
 # User Guide
 
+**DISCLAIMER**. The code provided in this repository is only intended to share the results of the article it refers to. The code is not optimised for efficient use. There are multiple blocks that have been implemented in a simple way for ease of debugging, but not for runtime optimisation.
 
 
-Before starting, write in config/file.ini the following parameters:
+Before starting, write in config/file.ini the following parameters. Visite the entry [README](../README.md) file for details of each parameter:
 
-	- data_path_dicom --> path to the directory with DICOM files.
-	- reference_bone --> path to the reference bone.
-	- output_path  --> path to the directory in which STL files will be save.
-	- resources_path  --> path to the directory in which resources (png) will be save.
-	- spacing --> resolution of the slices. Recommended: [0.5, 0.25, 0.25].
-	- threshold --> threshold for bounding box. Recommended: 50.
-	- extract --> choose between bones. Recommended: []
-	- size --> Recommended: 60 for spacing [0.5, 0.25, 0.25]. 30 for spacing [0.5, 0.5, 0.5]. 15 for spacing [0.5, 0.75, 0.75]
-	- kernel_preerosion --> kernel preerosion size. Recommended [1,1].
-	- kernel_firstdilation --> dilation kernel size. Recommended [7,7].
-	- kernel_firsterosion --> erosion kernel size. Recommended [6,6].
-	- threshold_between_min --> lower limit of the range of UH in the STL. Recommended: 250.
-	- threshold_between_max --> higher limit of the range of UH in the STL. Recommended: 2000.
-	- convert_stl --> boolean to make or not the STL file. Recommended: True.
-	- reference_bone --> path to the reference STL.
-	- num_views_thickness --> number of thicknesses.
+		[dicom]
+		data_path_dicom = C:/corticalMeasurement/data/
+		output_path = C:/corticalMeasurement/output/
+		resources_path = C:/corticalMeasurement/resources/
 
-*Do not modify the spacing value in all the process*
+		[pre-process]
+		spacing = [0.5,0.25,0.25]
+		threshold = 50
+		extract = []
+		size = 60
+		kernel_preerosion = [1,1]
+		kernel_firstdilation = [7,7]
+		kernel_firsterosion = [6,6]
+
+		[post-process]
+		threshold_between_min = 250
+		threshold_between_max = 2000
+		convert_stl = True
+
+		[thickness]
+		num_views_thickness = 9
+
+		[all dicom]
+		reference_bone = C:/corticalMeasurement/data/TAC A
+
+		[reference vectors]
+		orientation_vector = 
+		alignment_vector = 
+		
+		[retake]
+
+**IMPORTANT**. The spacing identifies the resampling of the input images. If after a first iteration a new one needs to be done to improve results of some bones, spacing should not be changed. 
 
 1. Script: generateSTls.py --> Generate STL models from DICOM files.
 	After the execution is finished, we will have in the directory set in output_path the STL models named as legX.stl.
@@ -41,6 +56,18 @@ These values must be written in file file.ini in section [retake] with the follo
 Example --> if the bone 4 belongs to the opposite leg to the reference one but the PCA component is okey, the structure will be: leg4 = 1,0
 
 4. Script: cT_Retake.py --> Performs re-orientation and re-alignment corrections and re-generates thickness profiles in selected bones.
+
+
+# Recommendations
+
+* Make first run of the whole process at low resolution, for example:
+
+	spacing = [1,1,1]
+	
+  This setting will improve dramatically the execution time. 
+ 
+ * 
+
 
 # API Reference
 
