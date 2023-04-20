@@ -2,6 +2,13 @@
 
 **DISCLAIMER**. The code provided in this repository is only intended to share the results of the article it refers to. The code is not optimised for efficient use. There are multiple blocks that have been implemented in a simple way for ease of debugging, but not for runtime optimisation.
 
+### 1. Clone repository:
+
+<p align="center">
+  <img src="images/step1.png" width="100" alt=""/>
+</p>
+
+### 2. Setup configuration file:
 
 Before starting, write in config/file.ini the following parameters. Visite the entry [README](../README.md) file for details of each parameter:
 
