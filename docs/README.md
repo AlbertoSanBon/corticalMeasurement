@@ -1,10 +1,6 @@
 # User Guide
 
 
-[API Reference](API-Reference.md)
-[Google](https://google.com)
-[API Reference](../README.md)
-
 
 Before starting, write in config/file.ini the following parameters:
 
@@ -45,3 +41,9 @@ These values must be written in file file.ini in section [retake] with the follo
 Example --> if the bone 4 belongs to the opposite leg to the reference one but the PCA component is okey, the structure will be: leg4 = 1,0
 
 4. Script: cT_Retake.py --> Performs re-orientation and re-alignment corrections and re-generates thickness profiles in selected bones.
+
+# API Reference
+
+The document linked [here](API-Reference.md) describe the implemented methods, and their parameters.
+
+
