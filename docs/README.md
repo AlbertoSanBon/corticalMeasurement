@@ -5,7 +5,7 @@
 ### 1. Clone repository:
 
 <p align="center">
-  <img src="images/step1.png" width="100" alt=""/>
+  <img src="images/step1.png" alt=""/>
 </p>
 
 ### 2. Setup configuration file:
