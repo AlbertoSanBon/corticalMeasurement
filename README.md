@@ -119,7 +119,7 @@ To replicate the results provided in the article, run those steps:
 The folder structure that we should have is the following.
 
 <p align="center">
-  <img src="docs/images/structure.png" alt=""/>
+  <img src="docs/images/Structure.png" alt=""/>
 </p>
 
 To run PYTHON code without errors, we must first install the libraries stored in the requirements.txt
