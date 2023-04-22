@@ -115,7 +115,50 @@ To replicate the results provided in the article, run those steps:
 		
 
 4. Run PYTHON code:
+
 The folder structure that we should have is the following.
+
+<p align="center">
+  <img src="docs/images/structure.png" alt=""/>
+</p>
+
+To run PYTHON code without errors, we must first install the libraries stored in the requirements.txt
+
+<p align="center">
+  <img src="docs/images/InstRequirements.png" alt=""/>
+</p>
+
+Run the first script --> generateSTLs.py
+
+<p align="center">
+  <img src="docs/images/script_st.png" alt=""/>
+</p>
+
+Before continuing, establish in file.ini the path to the stl of the reference_bone.
+
+Example: reference_bone = D:/corticalMeasurement/output/leg1.stl
+
+Run the second script --> referenceBone.py
+
+<p align="center">
+  <img src="docs/images/script_nd.png" alt=""/>
+</p>
+
+Run the third script --> correctionsThickness.py
+
+<p align="center">
+  <img src="docs/images/script_rd.png" alt=""/>
+</p>
+
+After execution, check the log file correctionsThickness.html and add to the retake section of the file.ini, if needed, the necessary values for the retake.
+
+Example: leg2=1.0
+
+Run the fourth script --> correctionsThickness.py
+
+<p align="center">
+  <img src="docs/images/script_th.png" alt=""/>
+</p>
 
 6. Review LOG file
 
