@@ -115,7 +115,9 @@ To replicate the results provided in the article, run those steps:
 		
 
 4. Run PYTHON code:
-5. Review LOG file
+The folder structure that we should have is the following.
+
+6. Review LOG file
 
 
 # Dependences:
