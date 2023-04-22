@@ -168,4 +168,5 @@ See requirements.txt for tested library versions
 
 ### Visual logging dependences:
 pip install visual-logging
+
 pip install vg
