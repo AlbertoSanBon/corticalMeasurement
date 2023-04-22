@@ -53,7 +53,7 @@ This section configures all the paths:
 
 #### all dicom
 
-- **reference_bone**. It the CT bones are desired to be aligned and oriented against a reference bone, this variable sets the PATH to its DICOM files
+- **reference_bone**. It the CT bones are desired to be aligned and oriented against a reference bone, this variable sets the PATH to its STL file
 
 #### reference vectors
 
