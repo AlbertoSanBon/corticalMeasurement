@@ -50,7 +50,7 @@ Before starting, write in config/file.ini the following parameters. Visite the e
 		num_views_thickness = 9
 
 		[all dicom]
-		reference_bone = C:/corticalMeasurement/data/TAC A
+		reference_bone = C:/corticalMeasurement/data/leg1.stl
 
 		[reference vectors]
 		orientation_vector = 
