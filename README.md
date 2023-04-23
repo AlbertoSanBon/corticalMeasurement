@@ -107,7 +107,7 @@ To replicate the results provided in the article, run those steps:
 		num_views_thickness = 9
 
 		[all dicom]
-		reference_bone = C:/corticalMeasurement/data/TAC A
+		reference_bone = C:/corticalMeasurement/data/leg1.stl
 
 		[reference vectors]
 		orientation_vector = 
