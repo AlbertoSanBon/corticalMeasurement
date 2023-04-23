@@ -20,6 +20,8 @@ Measuring cortical thickness would enable accurate traumatological surgeries and
 
 In the DATA folder, there are two sets of CT images used in the article to evaluate the performance of the code provided in this repository. The rest of the images cannot be shared due to confidentiality reasons. If any researcher is interested in replicating the article's results with the same dataset, they can proceed after signing the appropriate confidentiality agreements with the authors of the paper.
 
+More information about the two sets of CT images can be found in [this](docs/DATA-Reference.md) file.
+
 # Parameters description:
 
 All the configuration is centralized in the file.ini in the "config" folder. That file is organized in sections:
