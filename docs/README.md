@@ -1,6 +1,6 @@
 # User Guide
 
-**DISCLAIMER**. The code provided in this repository is only intended to share the results of the article it refers to. The code is not optimised for efficient use. There are multiple blocks that have been implemented in a simple way for ease of debugging, but not for runtime optimisation.
+**DISCLAIMER**. The code provided in this repository is only intended to share the results of the article it refers to. The code is not optimised for efficient use. Multiple blocks have been implemented in a simple way for ease of debugging, but not for runtime optimisation.
 
 ### 1. Clone repository:
 
@@ -25,7 +25,7 @@ The repository is structured in 6 folders:
 
 ### 3. Setup configuration file:
 
-Before starting, write in config/file.ini the following parameters. Visite the entry [README](../README.md) file for details of each parameter:
+Before starting, write in config/file.ini the following parameters. Visit the entry [README](../README.md) file for details of each parameter:
 
 		[dicom]
 		data_path_dicom = C:/corticalMeasurement/data/
@@ -58,26 +58,33 @@ Before starting, write in config/file.ini the following parameters. Visite the e
 		
 		[retake]
 
-**IMPORTANT**. The spacing identifies the resampling of the input images. If after a first iteration a new one needs to be done to improve results of some bones, spacing should not be changed. 
+**IMPORTANT**. The spacing identifies the resampling of the input images. If after a first iteration a new execution needs to be done to improve results of some bones, spacing should not be changed. 
 
-1. Script: generateSTls.py --> Generate STL models from DICOM files.
-	After the execution is finished, we will have in the directory set in output_path the STL models named as legX.stl.
-	Establish the reference STL model in file.ini.
+### 4. Understanding the Scripts:
 
-2. Script: referenceBone.py --> Generates reference vectors for future corrections and reference bone thickness profiles. 
-	When the execution ends, the orientation and alignment reference vectors that will be used in future corrections appear in the file.ini.
-	In addition, a log file (html) will be generated with the results of thickness for the reference bone.
+#### generateSTls.py.
+Generate STL models from DICOM files. After the execution is finished, we will have in the directory set in output_path the STL models named as legX.stl.
 
-3. Script: correctionsThickness.py --> Performs orientation and alignment corrections and generates thickness profiles.
-	When the execution ends, a log file (html) will be generated. In this file the corrections and thickness profiles are represented by bone.
 
-To continue, you have to review this log file bone by bone. Only if the bone in the orientation correction looks like it belongs to the opposite leg to the reference one, the change_leg parameter must be set to 1 or/and if the PCA component is towards the back of the bone, the parameter Correct_direction_manually must be set to 1.
+#### referenceBone.py.
+Generates reference vectors (orientation_vector and alignment_vector) for the corrections of other bones. 
+When the execution ends, the orientation and alignment reference vectors for future corrections appear in the file.ini. A log file (html) will be generated with the results of thickness for the reference bone.
 
-These values must be written in file file.ini in section [retake] with the following structure: legX = value_change_leg, value_Correct_direction_manually.
+#### correctionsThickness.py.
+Performs orientation and alignment corrections and generates thickness profiles. When the execution ends, a log file (html) will be generated. In this file, the corrections and thickness profiles are represented by bone.
+This log file needs to be reviewed for every bone to check if the leg side and the PCA direction have been properly detected. To assist with this task, the corrected version of each bone is rendered in 3D with the reference bone in the log file.
+If the side of the leg was not properly identified, a new iteration must be run changing the change_leg parameter to If the PCA vector was chosen in the opposite direction, a new iteration must be run setting the parameter correct_direction_manually to 1.
 
-Example --> if the bone 4 belongs to the opposite leg to the reference one but the PCA component is okey, the structure will be: leg4 = 1,0
+Parameters change_leg and correct_direction_manually are set in section [retake] in the file.ini with the following structure: 
 
-4. Script: cT_Retake.py --> Performs re-orientation and re-alignment corrections and re-generates thickness profiles in selected bones.
+	legX = change_leg, correct_direction_manually
+
+Example: if bone 4 belongs to the opposite leg to the reference one but the PCA component is correct, the file.ini setting will be: 
+
+	leg4 = 1,0
+
+#### cT_Retake.py.
+Performs re-orientation and re-alignment corrections and re-generates thickness profiles in selected bones.
 
 
 # Recommendations
@@ -86,13 +93,16 @@ Example --> if the bone 4 belongs to the opposite leg to the reference one but t
 
 	spacing = [1,1,1]
 	
-  This setting will improve dramatically the execution time. 
+  This setting will dramatically improve the execution time. It will also allow identifying issues about the leg side or the PCA direction in a low resolution and fast execution.
  
- * 
+ * Use the recommended settings of the file.ini configuration file. Even if the renderization of the bones in the logfile shows artefacts, the thickness measuring code only computes the thickness for the largest element of the slice. This element is frequently the bone section. Check the colored rendered version of the bone to identify if the thickness values belong to the desired element.
+ 
+ 
 
 
 # API Reference
 
 The document linked [here](API-Reference.md) describe the implemented methods, and their parameters.
+
 
 
