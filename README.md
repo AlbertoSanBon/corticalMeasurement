@@ -12,9 +12,21 @@ Measuring cortical thickness would enable accurate traumatological surgeries and
 
 
 <p align="center">
-  <img src="docs/images/paper.png" alt=""/>
+  <a href="https://www.sciencedirect.com/science/article/pii/S0010482523005887"><img src="docs/images/paper.png" alt=""/>
 </p>
 
+# Cite:
+If you use this code for your research, please cite our [work](https://www.sciencedirect.com/science/article/pii/S0010482523005887):
+
+	@article{sanchez2023systematic,
+	  title={Systematic measuring cortical thickness in tibiae for bio-mechanical analysis},
+	  author={S{\'a}nchez-Bonaste, Alberto and Merchante, Luis FS and G{\'o}nzalez-Bravo, Carlos and Carnicero, Alberto},
+	  journal={Computers in Biology and Medicine},
+	  doi={https://doi.org/10.1016/j.compbiomed.2023.107123},
+	  pages={107123},
+	  year={2023},
+	  publisher={Elsevier}
+	}
 
 # Data:
 
