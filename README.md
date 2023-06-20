@@ -12,7 +12,7 @@ Measuring cortical thickness would enable accurate traumatological surgeries and
 
 
 <p align="center">
-  <a href="https://www.sciencedirect.com/science/article/pii/S0010482523005887"><img src="docs/images/paper.png" height="200" alt=""/>
+  <a href="https://www.sciencedirect.com/science/article/pii/S0010482523005887"><img src="docs/images/paper.png" height="450" alt=""/>
 </p>
 
 # Cite:
