@@ -13,6 +13,7 @@ from vlogging import VisualRecord
 import cv2
 import math
 from scipy.ndimage import rotate
+import os
 # import vg
 
 import sys
@@ -34,6 +35,8 @@ config.read('../config/file.ini')
 
 # read values from a section
 output_path = config.get('dicom', 'output_path')
+if not os.path.exists(output_path+"stl"):
+    os.makedirs(output_path+"stl")
 resources_path = config.get('dicom', 'resources_path')
 data_path_dicom = config.get('dicom', 'data_path_dicom')
 
@@ -298,7 +301,7 @@ for i in onlyfiles_dicom:
         
         #Save to STL in the output path
         writer = vtk.vtkSTLWriter()
-        writer.SetFileName(output_path+"leg%d.stl" %(id))
+        writer.SetFileName(output_path+"\\stl\\"+"leg%d.stl" %(id))
         stripper.Update()
         writer.SetInputData(stripper.GetOutput())
         writer.Write()

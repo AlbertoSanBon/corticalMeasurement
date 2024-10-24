@@ -14,6 +14,8 @@ from os import listdir
 import vg
 import cv2 as cv
 from scipy.ndimage import rotate
+import os
+import pickle
 
 import sys
 sys.path.append("../libs")
@@ -36,6 +38,10 @@ config.read('../config/file.ini')
 
 # read values from a section
 output_path = config.get('dicom', 'output_path')
+if not os.path.exists(output_path+"thickness"):
+    os.makedirs(output_path+"thickness")
+if not os.path.exists(output_path+"profiles"):
+    os.makedirs(output_path+"profiles")
 resources_path = config.get('dicom', 'resources_path')
 
 # read values from a section
@@ -157,7 +163,7 @@ image=np_scalars[sliceCOM,:,:]
 ##################
 
 # List ALL STLs 
-output_path_stl = output_path
+output_path_stl = output_path+"\\stl\\"
 onlyfiles_stl = [f for f in listdir(output_path_stl)] 
 
 
@@ -930,6 +936,9 @@ for bone in onlyfiles_stl:
         #STEP SIX: 
             # Plot3D
         array2=np.array(array_thickness2)
+        np.savez_compressed(output_path+"thickness\\"+bone.split(".")[0], array2)
+        logger.debug(VisualRecord(">>> THICKNESS saved in:  %s" %(output_path+"thickness\\"+bone.split(".")[0])))
+        
         array_tmp2=array2.transpose(1, 2, 0)
         
         
@@ -1030,7 +1039,8 @@ for bone in onlyfiles_stl:
         array_thickness_1d,_ = convertTo1D(array_coordinates2,array_thickness2,countour_index=array_contourid2,reference_x = referencex)
 
         # Plot the graphs with the thickness. 
-        cortes = []                                        # Array with slices whose thickness is going to be represented
+        cortes = []                                         # Array with slices whose thickness is going to be represented
+        profiles = {}                                       # Dict to be saved with slice number and 1D thickness
         num_views=num_views_thickness                       # Number of views in the plot
         keys=[k for k,v in array_thickness_1d.items() if v!=None]   # Items of array_thickness
         total=len(keys)
@@ -1045,6 +1055,7 @@ for bone in onlyfiles_stl:
                 plt.axis((x1,x2,0,10))
                 plt.ylabel("Thickness [mm]")
                 cortes.append(keys[delta*i-1])
+                profiles[keys[delta*i-1]]=array_thickness_1d[keys[delta+i-1]]
             plt.title("Slice: "+str(keys[delta*i-1]))
         fig.suptitle('1D Thickness Contours')
         #plt.show()
@@ -1052,7 +1063,9 @@ for bone in onlyfiles_stl:
         cv_thickness = cv.imread(resources_path+"Thickness.png")
         resized = cv.resize(cv_thickness, (500,500), interpolation = cv.INTER_AREA)
         logger.debug(VisualRecord("Thickness", resized, fmt="png"))
-        
+        with open(output_path+"profiles\\"+bone.split(".")[0]+".pkl", 'wb') as handle:
+             pickle.dump(profiles, handle, protocol=pickle.HIGHEST_PROTOCOL)
+        logger.debug(VisualRecord(">>> PROFILES DICTIONARY saved in:  %s" %(output_path+"profiles\\"+bone.split(".")[0]+".pkl")))
         
         # Show the cuts generated in 2D
         show_cuts(array_thickness2, cortes, num_views, spacing2, origin2aligned_oriented)
@@ -1066,7 +1079,7 @@ for bone in onlyfiles_stl:
         show_cuts_position(cortes, num_views, G2_aligned_oriented, poly_data2_aligned_oriented_2, bounds2aligned_oriented, spacing2)
         cv_cuts_p = cv.imread("cuts_p.png")
         resized = cv.resize(cv_cuts_p, (350,350), interpolation = cv.INTER_AREA)
-        logger.debug(VisualRecord("thickness colors", resized, fmt="png"))
+        logger.debug(VisualRecord("3D chosen profiles", resized, fmt="png"))
 
     else:
         

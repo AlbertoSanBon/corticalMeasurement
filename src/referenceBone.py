@@ -10,6 +10,8 @@ import logging
 from logging import FileHandler
 from vlogging import VisualRecord
 import math
+import os
+import pickle
 
 import cv2 as cv
 
@@ -45,6 +47,14 @@ reference_bone = config.get('all dicom', 'reference_bone')
 # create a section to write reference vectors if does not exists
 if 'reference vectors' not in config:
     config.add_section('reference vectors')
+    
+# read values from a section
+output_path = config.get('dicom', 'output_path')
+if not os.path.exists(output_path+"thickness"):
+    os.makedirs(output_path+"thickness")
+if not os.path.exists(output_path+"profiles"):
+    os.makedirs(output_path+"profiles")
+resources_path = config.get('dicom', 'resources_path')
 
 ##########################
 # INITIALIZE LOGGER FILE #
@@ -172,6 +182,10 @@ sliceCOM=round(absolute_distance_to_COM/spacing[2])
 print("slice COM: ",sliceCOM)
 plt.imshow(array_thickness[sliceCOM],cmap="magma")
 
+#Save thickness to disk
+fname=reference_bone.split("\\")[-1].split(".")[0]
+np.savez_compressed(output_path+"thickness\\"+fname, array_thickness)
+logger.debug(VisualRecord(">>> THICKNESS saved in:  %s" %(output_path+"thickness\\"+fname)))
 
 ####################################
 # REFERENCE VECTOR FOR ORIENTATION #
@@ -202,10 +216,11 @@ cv_refOr = cv.imread(resources_path+"RefOrientationV.png")
 resized = cv.resize(cv_refOr, (350,350), interpolation = cv.INTER_AREA)
 logger.debug(VisualRecord("Ref Orientation Vector", resized, fmt="png"))
 
-print("main ORIENTING REFERENCE: ", vector1pca)
+vector1pca_tuple = tuple([float(i) for i in vector1pca])
+print("main ORIENTING REFERENCE: ", vector1pca_tuple)
 
 # Add reference vector in our config file
-config.set('reference vectors', 'orientation_vector', [vector1pca[0], vector1pca[1]])
+config.set('reference vectors', 'orientation_vector', [vector1pca_tuple[0], vector1pca_tuple[1]])
 
 # Writing our configuration file to 'config/file.ini'
 with open('../config/file.ini', 'w') as configfile:
@@ -280,6 +295,7 @@ print("Number of slices: ",len(array_thickness_1d.keys()))
 
 # Plot the graphs with the thickness. 
 cortes = []                                        # Array with slices whose thickness is going to be represented
+profiles = {}                                       # Dict to be saved with slice number and 1D thickness
 num_views=num_views_thickness                       # Number of views in the plot
 keys=[k for k,v in array_thickness_1d.items() if v!=None]   # Items of array_thickness
 total=len(keys)
@@ -294,13 +310,20 @@ for i in range (1,num_views+1):
         plt.axis((x1,x2,0,10))
         plt.ylabel("Thickness [mm]")
         cortes.append(keys[delta*i])
+        profiles[keys[delta*i-1]]=array_thickness_1d[keys[delta+i-1]]
     plt.title("Slice: "+str(keys[delta*i]))
 fig.suptitle('1D Thickness Contours')
 #plt.show()
 plt.savefig(resources_path+"Thickness.png")
 cv_thickness = cv.imread(resources_path+"Thickness.png")
 resized = cv.resize(cv_thickness, (500,500), interpolation = cv.INTER_AREA)
-logger.debug(VisualRecord("Thickness", resized, fmt="png"))
+logger.debug(VisualRecord("1D Thickness Contours", resized, fmt="png"))
+
+#Save thickness dictionary profiles to disk
+fname=reference_bone.split("\\")[-1].split(".")[0]
+with open(output_path+"profiles\\"+fname+".pkl", 'wb') as handle:
+     pickle.dump(profiles, handle, protocol=pickle.HIGHEST_PROTOCOL)
+logger.debug(VisualRecord(">>> PROFILES DICTIONARY saved in:  %s" %(output_path+"profiles\\"+fname+".pkl")))
 
 
 #############################
@@ -310,7 +333,7 @@ show_cuts(array_thickness, cortes, num_views, spacing, origin)
 plt.savefig(resources_path+"cuts.png")
 cv_cuts = cv.imread(resources_path+"cuts.png")
 resized = cv.resize(cv_cuts, (500,500), interpolation = cv.INTER_AREA)
-logger.debug(VisualRecord("Cuts", resized, fmt="png"))
+logger.debug(VisualRecord("2D Thickness Contours", resized, fmt="png"))
 
 
 #############################
@@ -319,7 +342,7 @@ logger.debug(VisualRecord("Cuts", resized, fmt="png"))
 show_cuts_position(cortes, num_views, G, poly_data, bounds, spacing)
 cv_cuts_p = cv.imread("cuts_p.png")
 resized = cv.resize(cv_cuts_p, (350,350), interpolation = cv.INTER_AREA)
-logger.debug(VisualRecord("thickness colors", resized, fmt="png"))
+logger.debug(VisualRecord("3D chosen profiles", resized, fmt="png"))
 
 
 #########################
