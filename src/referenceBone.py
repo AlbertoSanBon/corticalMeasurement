@@ -184,7 +184,8 @@ plt.imshow(array_thickness[sliceCOM],cmap="magma")
 
 #Save thickness to disk
 fname=reference_bone.split("\\")[-1].split(".")[0]
-np.savez_compressed(output_path+"thickness\\"+fname, array_thickness)
+array=np.array(array_thickness)
+np.savez_compressed(output_path+"thickness\\"+fname, array)
 logger.debug(VisualRecord(">>> THICKNESS saved in:  %s" %(output_path+"thickness\\"+fname)))
 
 ####################################
@@ -286,6 +287,7 @@ for referencex in tqdm(range(dimx)):
     lengths.append(noreferences)
 referencex=list(range(dimx))[lengths.index(min(lengths))]
 print("The reference X that maximices the number of valid contours is: ",referencex)
+logger.debug(VisualRecord(">>> REFERENCE for the 1D profiles conversion was:  %s" %(referencex)))
 
 # Extraxt 1D profiles of thickness
 array_thickness_1d,_ = convertTo1D(array_coordinates,array_thickness,countour_index=array_contourid,reference_x = referencex)
@@ -304,14 +306,14 @@ rows=num_views//4+1
 fig=plt.figure(figsize=(18,rows*4))
 for i in range (1,num_views+1):
     plt.subplot(rows,4,i)
-    if array_thickness_1d[keys[delta+i]]: 
-        plt.plot(array_thickness_1d[keys[delta+i]])
+    if array_thickness_1d[keys[delta*i-1]]: 
+        plt.plot(array_thickness_1d[keys[delta*i-1]])
         x1,x2,y1,y2 = plt.axis()  
         plt.axis((x1,x2,0,10))
         plt.ylabel("Thickness [mm]")
-        cortes.append(keys[delta*i])
-        profiles[keys[delta*i-1]]=array_thickness_1d[keys[delta+i-1]]
-    plt.title("Slice: "+str(keys[delta*i]))
+        cortes.append(keys[delta*i-1])
+        profiles[keys[delta*i-1]]=array_thickness_1d[keys[delta*i-1]]
+    plt.title("Slice: "+str(keys[delta*i-1]))
 fig.suptitle('1D Thickness Contours')
 #plt.show()
 plt.savefig(resources_path+"Thickness.png")
@@ -440,5 +442,5 @@ filename = resources_path+'colors3D.png'
 WriteImage(filename, renderWindow, rgba=False)
 cv_colors3D = cv.imread(resources_path+"colors3D.png")
 resized = cv.resize(cv_colors3D, (350,350), interpolation = cv.INTER_AREA)
-logger.debug(VisualRecord("thickness colors", resized, fmt="png"))
+logger.debug(VisualRecord("3D Bone thickness in colors", resized, fmt="png"))
 #renderWindowInteractor.Start()

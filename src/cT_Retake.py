@@ -179,7 +179,7 @@ for opt in config[section]:
         Correct_direction_manually = True
         
     # List ALL STLs 
-    output_path_stl = output_path
+    output_path_stl = output_path+"\\stl\\"
     onlyfiles_stl = [f for f in listdir(output_path_stl)] 
     
     # Find bone and operate
@@ -865,6 +865,8 @@ for opt in config[section]:
     #STEP SIX: 
         # Plot3D
     array2=np.array(array_thickness2)
+    np.savez_compressed(output_path+"thickness\\"+bone.split(".")[0], array2)
+    logger.debug(VisualRecord(">>> THICKNESS saved in:  %s" %(output_path+"thickness\\"+bone.split(".")[0])))
     array_tmp2=array2.transpose(1, 2, 0)
     
     
@@ -960,12 +962,14 @@ for opt in config[section]:
         lengths.append(noreferences)
     referencex=list(range(dimx))[lengths.index(min(lengths))]
     print("The reference X that maximices the number of valid contours is: ",referencex)
+    logger.debug(VisualRecord(">>> REFERENCE for the 1D profiles conversion was:  %s" %(referencex)))
     
     # Extraxt 1D profiles of thickness
     array_thickness_1d,_ = convertTo1D(array_coordinates2,array_thickness2,countour_index=array_contourid2,reference_x = referencex)
 
     # Plot the graphs with the thickness. 
     cortes = []                                        # Array with slices whose thickness is going to be represented
+    profiles = {}                                       # Dict to be saved with slice number and 1D thickness
     num_views=num_views_thickness                       # Number of views in the plot
     keys=[k for k,v in array_thickness_1d.items() if v!=None]   # Items of array_thickness
     total=len(keys)
@@ -974,19 +978,23 @@ for opt in config[section]:
     fig=plt.figure(figsize=(18,rows*4))
     for i in range (1,num_views+1):
         plt.subplot(rows,4,i)
-        if array_thickness_1d[keys[delta+i]]: 
-            plt.plot(array_thickness_1d[keys[delta+i]])
+        if array_thickness_1d[keys[delta*i-1]]: 
+            plt.plot(array_thickness_1d[keys[delta*i-1]])
             x1,x2,y1,y2 = plt.axis()  
             plt.axis((x1,x2,0,10))
             plt.ylabel("Thickness [mm]")
-            cortes.append(keys[delta*i])
-        plt.title("Slice: "+str(keys[delta*i]))
+            cortes.append(keys[delta*i-1])
+            profiles[keys[delta*i-1]]=array_thickness_1d[keys[delta*i-1]]
+        plt.title("Slice: "+str(keys[delta*i-1]))
     fig.suptitle('1D Thickness Contours')
     #plt.show()
     plt.savefig(resources_path+"Thickness.png")
     cv_thickness = cv.imread(resources_path+"Thickness.png")
     resized = cv.resize(cv_thickness, (500,500), interpolation = cv.INTER_AREA)
-    logger.debug(VisualRecord("Thickness", resized, fmt="png"))
+    logger.debug(VisualRecord("1D Thickness Contours", resized, fmt="png"))
+    with open(output_path+"profiles\\"+bone.split(".")[0]+".pkl", 'wb') as handle:
+        pickle.dump(profiles, handle, protocol=pickle.HIGHEST_PROTOCOL)
+    logger.debug(VisualRecord(">>> PROFILES DICTIONARY saved in:  %s" %(output_path+"profiles\\"+bone.split(".")[0]+".pkl")))
     
     
     # Show the cuts generated in 2D
@@ -994,12 +1002,110 @@ for opt in config[section]:
     plt.savefig(resources_path+"cuts.png")
     cv_cuts = cv.imread(resources_path+"cuts.png")
     resized = cv.resize(cv_cuts, (500,500), interpolation = cv.INTER_AREA)
-    logger.debug(VisualRecord("Cuts", resized, fmt="png"))
+    logger.debug(VisualRecord("2D Thickness Contours", resized, fmt="png"))
 
 
     # Show the position of the cuts in a 3D model
     show_cuts_position(cortes, num_views, G2_aligned_oriented, poly_data2_aligned_oriented_2, bounds2aligned_oriented, spacing2)
     cv_cuts_p = cv.imread("cuts_p.png")
     resized = cv.resize(cv_cuts_p, (350,350), interpolation = cv.INTER_AREA)
-    logger.debug(VisualRecord("thickness colors", resized, fmt="png"))
+    logger.debug(VisualRecord("3D chosen profiles", resized, fmt="png"))
+
+    #########################
+    # REPRESENT COLOR IN 3D #
+    #########################
+    #Convert the array_thickness to a vtkImageData
+    array=np.array(array_thickness)
+    array_tmp=array.transpose(1, 2, 0)
+    print("ORG: ",array.shape)
+    print("ORG_TRSP: ",array_tmp.shape)
+
+    # Convert numpy array to VTK array (vtkFloatArray)
+    vtk_data_array = numpy_support.numpy_to_vtk(
+        num_array=array_tmp.transpose(2, 1, 0).ravel(),  # ndarray contains the fitting result from the points. It is a 3D array
+        deep=True,
+        array_type=vtk.VTK_FLOAT)
+
+    # Convert the VTK array to vtkImageData
+    img_vtk = vtk.vtkImageData()
+    img_vtk.SetDimensions(array_tmp.shape)
+    img_vtk.SetSpacing(spacing)
+    img_vtk.SetOrigin(origin)
+    img_vtk.GetPointData().SetScalars(vtk_data_array)
+
+    print("VTK: ",img_vtk.GetDimensions())
+
+    x,y,num=img_vtk.GetDimensions()
+    print(img_vtk.GetDimensions())
+    ox,oy,oz=img_vtk.GetOrigin()
+    print(img_vtk.GetOrigin())
+
+    thickness=img_vtk
+
+    surface = vtk.vtkMarchingCubes()
+    surface.SetInputData(imgstenc.GetOutput())
+    surface.ComputeNormalsOn()
+    surface.SetValue(0, 127.5)
+
+    surface.Update()
+
+    probe = vtk.vtkProbeFilter()
+    probe.SetInputData(surface.GetOutput())
+    probe.SetSourceData(thickness)
+    probe.Update()
+
+    probe.GetOutput()
+    rng = thickness.GetScalarRange()
+    fMin = rng[0]
+    fMax = rng[1]
+    print("RANGE:", rng[0],rng[1])
+
+    # Make the lookup table.
+    lut = vtk.vtkLookupTable()
+    lut.SetTableRange(fMin, fMax)
+    lut.SetSaturationRange(1, 1)
+    lut.SetHueRange(0, 0.6)
+    lut.SetValueRange(0, 5)
+    lut.Build()
+
+    normals = vtk.vtkPolyDataNormals()
+    normals.SetInputConnection(probe.GetOutputPort())
+
+    mapper = vtk.vtkPolyDataMapper()
+    mapper.ScalarVisibilityOn()
+    mapper.SetLookupTable(lut)
+    mapper.SetInputConnection(normals.GetOutputPort())
+    mapper.SetScalarRange(fMin, fMax)
+
+    actor = vtk.vtkActor()
+    actor.SetMapper(mapper)
+
+    # Create a renderer, render window, and interactor
+    renderer = vtk.vtkRenderer()
+    renderWindow = vtk.vtkRenderWindow()
+    renderWindow.AddRenderer(renderer)
+    renderWindowInteractor = vtk.vtkRenderWindowInteractor()
+    renderWindowInteractor.SetRenderWindow(renderWindow)
+
+    # Add the actors to the scene
+    renderer.AddActor(actor)
+    renderer.SetBackground(1, 1, 1) 
+    renderer.ResetCamera()
+    renderer.ResetCameraClippingRange()
+    camera = renderer.GetActiveCamera()
+    camera.Elevation(230)
+    camera.Azimuth(135)
+    camera.Roll(55)
+    renderer.SetActiveCamera(camera)
+    # Add the actors to the scene
+
+    # Render and interact
+    renderWindow.SetSize(480, 480)
+    renderWindow.Render()
+    filename = resources_path+'colors3D.png'
+    WriteImage(filename, renderWindow, rgba=False)
+    cv_colors3D = cv.imread(resources_path+"colors3D.png")
+    resized = cv.resize(cv_colors3D, (350,350), interpolation = cv.INTER_AREA)
+    logger.debug(VisualRecord("3D Bone thickness in colors", resized, fmt="png"))
+    #renderWindowInteractor.Start()
 

@@ -755,6 +755,9 @@ def convertTo1D(array_coordinates,array_thickness,countour_index=0,reference_x =
     -------
     array_thickness_1d : dict
         Measures of thickness of the contour selected of each slice.
+
+    noreferences : int
+        Number of slices that didnt match that reference.
     """
     noreferences=0
     array_thickness_1d={}

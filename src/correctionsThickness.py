@@ -1034,6 +1034,8 @@ for bone in onlyfiles_stl:
             lengths.append(noreferences)
         referencex=list(range(dimx))[lengths.index(min(lengths))]
         print("The reference X that maximices the number of valid contours is: ",referencex)
+        logger.debug(VisualRecord(">>> REFERENCE for the 1D profiles conversion was:  %s" %(referencex)))
+
         
         # Extraxt 1D profiles of thickness
         array_thickness_1d,_ = convertTo1D(array_coordinates2,array_thickness2,countour_index=array_contourid2,reference_x = referencex)
@@ -1049,20 +1051,20 @@ for bone in onlyfiles_stl:
         fig=plt.figure(figsize=(18,rows*4))
         for i in range (1,num_views+1):
             plt.subplot(rows,4,i)
-            if array_thickness_1d[keys[delta+i-1]]: 
-                plt.plot(array_thickness_1d[keys[delta+i-1]])
+            if array_thickness_1d[keys[delta*i-1]]: 
+                plt.plot(array_thickness_1d[keys[delta*i-1]])
                 x1,x2,y1,y2 = plt.axis()  
                 plt.axis((x1,x2,0,10))
                 plt.ylabel("Thickness [mm]")
                 cortes.append(keys[delta*i-1])
-                profiles[keys[delta*i-1]]=array_thickness_1d[keys[delta+i-1]]
+                profiles[keys[delta*i-1]]=array_thickness_1d[keys[delta*i-1]]
             plt.title("Slice: "+str(keys[delta*i-1]))
         fig.suptitle('1D Thickness Contours')
         #plt.show()
         plt.savefig(resources_path+"Thickness.png")
         cv_thickness = cv.imread(resources_path+"Thickness.png")
         resized = cv.resize(cv_thickness, (500,500), interpolation = cv.INTER_AREA)
-        logger.debug(VisualRecord("Thickness", resized, fmt="png"))
+        logger.debug(VisualRecord("1D Thickness Contours", resized, fmt="png"))
         with open(output_path+"profiles\\"+bone.split(".")[0]+".pkl", 'wb') as handle:
              pickle.dump(profiles, handle, protocol=pickle.HIGHEST_PROTOCOL)
         logger.debug(VisualRecord(">>> PROFILES DICTIONARY saved in:  %s" %(output_path+"profiles\\"+bone.split(".")[0]+".pkl")))
@@ -1072,7 +1074,7 @@ for bone in onlyfiles_stl:
         plt.savefig(resources_path+"cuts.png")
         cv_cuts = cv.imread(resources_path+"cuts.png")
         resized = cv.resize(cv_cuts, (500,500), interpolation = cv.INTER_AREA)
-        logger.debug(VisualRecord("Cuts", resized, fmt="png"))
+        logger.debug(VisualRecord("2D Thickness Contours", resized, fmt="png"))
 
 
         # Show the position of the cuts in a 3D model
