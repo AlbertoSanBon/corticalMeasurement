@@ -815,7 +815,7 @@ def convertTo1D(array_coordinates,array_thickness,countour_index=0,reference_x =
     
     return array_thickness_1d,noreferences
 
-def show_cuts_position(cortesG, num_views, G, poly_data, bounds, spacing):
+def show_cuts_position(cortesG, num_views, G, poly_data, bounds, spacing, resources_path):
     """
     Introduction
     ------------
@@ -898,7 +898,7 @@ def show_cuts_position(cortesG, num_views, G, poly_data, bounds, spacing):
     # Render and interact
     renderWindow.SetSize(480, 480)
     renderWindow.Render()
-    filename = 'cuts_p.png'
+    filename = resources_path+'cuts_p.png'
     WriteImage(filename, renderWindow, rgba=False)
     #renderWindowInteractor.Start()
 

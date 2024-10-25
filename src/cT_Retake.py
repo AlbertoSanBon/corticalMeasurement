@@ -1006,8 +1006,8 @@ for opt in config[section]:
 
 
     # Show the position of the cuts in a 3D model
-    show_cuts_position(cortes, num_views, G2_aligned_oriented, poly_data2_aligned_oriented_2, bounds2aligned_oriented, spacing2)
-    cv_cuts_p = cv.imread("cuts_p.png")
+    show_cuts_position(cortes, num_views, G2_aligned_oriented, poly_data2_aligned_oriented_2, bounds2aligned_oriented, spacing2, resources_path)
+    cv_cuts_p = cv.imread(resources_path+"cuts_p.png")
     resized = cv.resize(cv_cuts_p, (350,350), interpolation = cv.INTER_AREA)
     logger.debug(VisualRecord("3D chosen profiles", resized, fmt="png"))
 
