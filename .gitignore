@@ -1,3 +1,6 @@
 .ipynb_checkpoints
 config/__pycache__/
 docs/_build
+out/
+resources/
+src/__pycache__
