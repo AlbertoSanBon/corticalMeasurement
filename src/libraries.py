@@ -415,7 +415,7 @@ def make_bonesmask(img, kernel_preErosion, kernel_firstDilation, kernel_firstEro
         mask[:] = 0
         return mask, mask*img, mask*img_org, mask
     
-    kmeans = KMeans(n_clusters=2).fit(np.reshape(middle,[np.prod(middle.shape),1]))
+    kmeans = KMeans(n_clusters=2, n_init = 10).fit(np.reshape(middle,[np.prod(middle.shape),1]))
     centers = sorted(kmeans.cluster_centers_.flatten())
     threshold = np.mean(centers)
     thresh_img = np.where(img<threshold,0.0,1.0)  # threshold the image
