@@ -286,9 +286,22 @@ for i in onlyfiles_dicom:
     
     # Show the 3D model
     render_window.Render()
+
+    # Capture the rendered scene to an image
+    window_to_image_filter = vtk.vtkWindowToImageFilter()
+    window_to_image_filter.SetInput(render_window)
+    window_to_image_filter.Update()
+
+    # Save the image to a PNG file
     filename = resources_path+'bone3D.png'
-    WriteImage(filename, render_window, rgba=False)
-    cv_bone3D = cv2.imread(resources_path+"bone3D.png")
+    writer = vtk.vtkPNGWriter()
+    writer.SetFileName(filename)
+    writer.SetInputConnection(window_to_image_filter.GetOutputPort())
+    writer.Write()
+
+    
+    #WriteImage(filename, render_window, rgba=False)
+    cv_bone3D = cv2.imread(filename)
     resized = cv2.resize(cv_bone3D, (350,350), interpolation = cv2.INTER_AREA)
     logger.debug(VisualRecord("Render Bone 3D", resized, fmt="png"))
     #interactor.Start()
