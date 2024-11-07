@@ -94,7 +94,8 @@ for i in onlyfiles_dicom:
     # Increase the value to identify the bone
     id+=1
     
-    logger.debug(VisualRecord(">>> BONE FROM: %s" %(i) + ", BONE SAVED :leg%d " %(id)))
+    #logger.debug(VisualRecord(">>> BONE FROM: %s" %(i) + ", BONE SAVED :leg%d " %(id)))
+    logger.debug(VisualRecord(">>> BONE FROM: %s" %(i) + ", BONE SAVED :%s " %(i)))
     
     # Path of slices
     data_path = data_path_dicom+i
@@ -283,6 +284,14 @@ for i in onlyfiles_dicom:
     
     # Apply the actor to the renderer
     renderer.AddActor(actor)
+
+    renderer.ResetCamera()
+    renderer.ResetCameraClippingRange()
+    camera = renderer.GetActiveCamera()
+    camera.Elevation(45)
+    camera.Azimuth(90)
+    camera.Roll(-45)
+    renderer.SetActiveCamera(camera)
     
     # Show the 3D model
     render_window.Render()
@@ -298,12 +307,11 @@ for i in onlyfiles_dicom:
     writer.SetFileName(filename)
     writer.SetInputConnection(window_to_image_filter.GetOutputPort())
     writer.Write()
-
     
     #WriteImage(filename, render_window, rgba=False)
     cv_bone3D = cv2.imread(filename)
     resized = cv2.resize(cv_bone3D, (350,350), interpolation = cv2.INTER_AREA)
-    logger.debug(VisualRecord("Render Bone 3D", resized, fmt="png"))
+    logger.debug(VisualRecord("Render Bone 3D: "+i, resized, fmt="png"))
     #interactor.Start()
     
     # Convert to STL file
@@ -314,7 +322,8 @@ for i in onlyfiles_dicom:
         
         #Save to STL in the output path
         writer = vtk.vtkSTLWriter()
-        writer.SetFileName(output_path+"\\stl\\"+"leg%d.stl" %(id))
+        writer.SetFileName(output_path+"\\stl\\"+"%s.stl" %(i))
+        #writer.SetFileName(output_path+"\\stl\\"+"leg%d.stl" %(id))
         stripper.Update()
         writer.SetInputData(stripper.GetOutput())
         writer.Write()

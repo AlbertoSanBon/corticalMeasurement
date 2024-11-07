@@ -342,7 +342,7 @@ logger.debug(VisualRecord("2D Thickness Contours", resized, fmt="png"))
 # SHOW CUTS GENERATED IN 3D #
 #############################
 show_cuts_position(cortes, num_views, G, poly_data, bounds, spacing, resources_path)
-cv_cuts_p = cv.imread("cuts_p.png")
+cv_cuts_p = cv.imread(resources_path+"cuts_p.png")
 resized = cv.resize(cv_cuts_p, (350,350), interpolation = cv.INTER_AREA)
 logger.debug(VisualRecord("3D chosen profiles", resized, fmt="png"))
 
