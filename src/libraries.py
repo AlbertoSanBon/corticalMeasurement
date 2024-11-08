@@ -890,9 +890,12 @@ def show_cuts_position(cortesG, num_views, G, poly_data, bounds, spacing, resour
     renderer.ResetCamera()
     renderer.ResetCameraClippingRange()
     camera = renderer.GetActiveCamera()
-    camera.Elevation(230)
-    camera.Azimuth(135)
-    camera.Roll(55)
+    #camera.Elevation(230)
+    #camera.Azimuth(135)
+    #camera.Roll(55)
+    camera.Elevation(270)
+    camera.Azimuth(0)
+    camera.Roll(0)
     renderer.SetActiveCamera(camera)
         
     # Render and interact

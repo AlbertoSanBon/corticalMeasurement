@@ -930,7 +930,7 @@ for bone in onlyfiles_stl:
         plt.savefig(resources_path+"cOrF.png")
         cv_cOrF = cv.imread(resources_path+"cOrF.png")
         resized = cv.resize(cv_cOrF, (850,350), interpolation = cv.INTER_AREA)
-        logger.debug(VisualRecord("#1 Reference Bone #2 Processed Bone {} after aligning  #3 Processed Bone {} after aligning and orienting".format(bone), resized, fmt="png"))
+        logger.debug(VisualRecord("#1 Reference Bone #2 Processed Bone {0} after aligning  #3 Processed Bone {0} after aligning and orienting".format(bone), resized, fmt="png"))
         
         
         #STEP SIX: 

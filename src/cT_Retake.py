@@ -14,6 +14,7 @@ from os import listdir
 import vg
 import cv2 as cv
 from scipy.ndimage import rotate
+import pickle
 
 import sys
 sys.path.append("../libs")
@@ -183,8 +184,10 @@ for opt in config[section]:
     onlyfiles_stl = [f for f in listdir(output_path_stl)] 
     
     # Find bone and operate
+    print("---",opt)
     for i, files in enumerate(onlyfiles_stl):  # If is the bone select the bone
-        if not files.find(opt):
+        print(">>>",i,files)
+        if not files.lower().find(opt):
             bone = onlyfiles_stl[i]
         
     # Perform correction for retake bones
@@ -379,7 +382,7 @@ for opt in config[section]:
     WriteImage(filename, renderWindow3, rgba=False)
     cv_correctAlignment = cv.imread(resources_path+"correctAlignment.png")
     resized = cv.resize(cv_correctAlignment, (350,350), interpolation = cv.INTER_AREA)
-    logger.debug(VisualRecord("Correction in alignment", resized, fmt="png"))
+    logger.debug(VisualRecord("Correction in alignment: "+bone, resized, fmt="png"))
     #renderWindowInteractor3.Start()
     
     
@@ -495,7 +498,7 @@ for opt in config[section]:
     plt.savefig(resources_path+"OrientationV.png")
     cv_OrV = cv.imread(resources_path+"OrientationV.png")
     resized = cv.resize(cv_OrV, (450,350), interpolation = cv.INTER_AREA)
-    logger.debug(VisualRecord("Orientation Vector", resized, fmt="png"))
+    logger.debug(VisualRecord("Orientation Vector for: "+bone, resized, fmt="png"))
     
     #TRUE IF MAIN VECTOR IS IN OTHER DIRECTION
     Correct_direction_manually = Correct_direction_manually # sólo poner a True si la referencia de PCA apunta hacia la parte mala de la tibia en lugar de la parte buena
@@ -514,21 +517,21 @@ for opt in config[section]:
     np_scalars2aligned_oriented = rotate(np_scalars2aligned, angle=angle, axes=(1, 2), reshape=False)
     
     image_restored=np_scalars2aligned_oriented[sliceCOM2,:,:]
-    plt.figure(figsize=(20,10))
+    plt.figure(figsize=(30,10))
     plt.subplot(1,3,1)
     plt.imshow(image)
-    plt.title("Leg 1")
+    plt.title("Leg 1 [Reference Leg]", fontdict = {'fontsize' : 25})
     plt.subplot(1,3,2)
     plt.imshow(image2)
-    plt.title("Leg 2")
+    plt.title("Leg 2 [Processed Leg]", fontdict = {'fontsize' : 25})
     plt.subplot(1,3,3)
     plt.imshow(image_restored)
-    plt.title("Leg 2 Corrected")
+    plt.title("Leg 2 Oriented [Processed Leg]", fontdict = {'fontsize' : 25})
     #plt.show()
     plt.savefig(resources_path+"cOr.png")
     cv_cOr = cv.imread(resources_path+"cOr.png")
-    resized = cv.resize(cv_cOr, (450,350), interpolation = cv.INTER_AREA)
-    logger.debug(VisualRecord("Correction in Orientation", resized, fmt="png"))
+    resized = cv.resize(cv_cOr, (850,350), interpolation = cv.INTER_AREA)
+    logger.debug(VisualRecord("Correction in Orientation: "+bone, resized, fmt="png"))
     
     
     #FOURTH STEP: 
@@ -727,7 +730,7 @@ for opt in config[section]:
     WriteImage(filename, renderWindow3, rgba=False)
     cv_aligOrien = cv.imread(resources_path+"aligOrien.png")
     resized = cv.resize(cv_aligOrien, (350,350), interpolation = cv.INTER_AREA)
-    logger.debug(VisualRecord("Bone 2 aligned and oriented respect reference bone", resized, fmt="png"))
+    logger.debug(VisualRecord("Bone {} aligned and oriented respect reference bone".format(bone), resized, fmt="png"))
     #renderWindowInteractor3.Start()
     
     # Now we have bone 2 aligned and oriented respect reference bone
@@ -842,24 +845,24 @@ for opt in config[section]:
     plt.savefig(resources_path+"pcaF.png")
     cv_pcaF = cv.imread(resources_path+"pcaF.png")
     resized = cv.resize(cv_pcaF, (450,350), interpolation = cv.INTER_AREA)
-    logger.debug(VisualRecord("PCA vector of final bone corrected", resized, fmt="png"))
+    logger.debug(VisualRecord("PCA vector of final bone {} corrected".format(bone), resized, fmt="png"))
     
     image_final=np_scalars2_aligned_oriented[sliceCOM2aligned_oriented,:,:]
-    plt.figure(figsize=(20,10))
+    plt.figure(figsize=(30,10))
     plt.subplot(1,3,1)
-    plt.imshow(image)  # COM bone1
-    plt.title("Leg 1")
+    plt.imshow(image)
+    plt.title("Leg 1 [Reference Leg]", fontdict = {'fontsize' : 25})
     plt.subplot(1,3,2)
-    plt.imshow(image2) # COM bone2 after aligning
-    plt.title("Leg 2")
+    plt.imshow(image2) #image that is not rotated
+    plt.title("Leg 2 [Processed Leg]", fontdict = {'fontsize' : 25})
     plt.subplot(1,3,3)
-    plt.imshow(image_final) # COM bone2 after aligning and orienting
-    plt.title("Leg 2 Oriented")
+    plt.imshow(image_restored) # image rotated
+    plt.title("Leg 2 Corrected [Processed Leg]", fontdict = {'fontsize' : 25})
     #plt.show()
     plt.savefig(resources_path+"cOrF.png")
     cv_cOrF = cv.imread(resources_path+"cOrF.png")
-    resized = cv.resize(cv_cOrF, (450,350), interpolation = cv.INTER_AREA)
-    logger.debug(VisualRecord("#1 bone1, #2 bone2 after aligning, #3 bone2 after aligning and orienting", resized, fmt="png"))
+    resized = cv.resize(cv_cOrF, (850,350), interpolation = cv.INTER_AREA)
+    logger.debug(VisualRecord("#1 Reference Bone #2 Processed Bone {0} after aligning  #3 Processed Bone {0} after aligning and orienting".format(bone), resized, fmt="png"))
     
     
     #STEP SIX: 
@@ -948,7 +951,7 @@ for opt in config[section]:
     WriteImage(filename, renderWindow, rgba=False)
     cv_corrected3D = cv.imread(resources_path+"corrected3D.png")
     resized = cv.resize(cv_corrected3D, (350,350), interpolation = cv.INTER_AREA)
-    logger.debug(VisualRecord("Corrected Bone Colored 3D", resized, fmt="png"))
+    logger.debug(VisualRecord("Corrected Bone {} Colored 3D".format(bone), resized, fmt="png"))
     #renderWindowInteractor.Start()
     
     #STEP SEVEN:
@@ -991,7 +994,7 @@ for opt in config[section]:
     plt.savefig(resources_path+"Thickness.png")
     cv_thickness = cv.imread(resources_path+"Thickness.png")
     resized = cv.resize(cv_thickness, (500,500), interpolation = cv.INTER_AREA)
-    logger.debug(VisualRecord("1D Thickness Contours", resized, fmt="png"))
+    logger.debug(VisualRecord("1D Thickness Contours for bone: "+bone, resized, fmt="png"))
     with open(output_path+"profiles\\"+bone.split(".")[0]+".pkl", 'wb') as handle:
         pickle.dump(profiles, handle, protocol=pickle.HIGHEST_PROTOCOL)
     logger.debug(VisualRecord(">>> PROFILES DICTIONARY saved in:  %s" %(output_path+"profiles\\"+bone.split(".")[0]+".pkl")))
@@ -1002,20 +1005,20 @@ for opt in config[section]:
     plt.savefig(resources_path+"cuts.png")
     cv_cuts = cv.imread(resources_path+"cuts.png")
     resized = cv.resize(cv_cuts, (500,500), interpolation = cv.INTER_AREA)
-    logger.debug(VisualRecord("2D Thickness Contours", resized, fmt="png"))
+    logger.debug(VisualRecord("2D Thickness Contours for bone: "+bone, resized, fmt="png"))
 
 
     # Show the position of the cuts in a 3D model
     show_cuts_position(cortes, num_views, G2_aligned_oriented, poly_data2_aligned_oriented_2, bounds2aligned_oriented, spacing2, resources_path)
     cv_cuts_p = cv.imread(resources_path+"cuts_p.png")
     resized = cv.resize(cv_cuts_p, (350,350), interpolation = cv.INTER_AREA)
-    logger.debug(VisualRecord("3D chosen profiles", resized, fmt="png"))
+    logger.debug(VisualRecord("3D chosen profiles for bone: "+bone, resized, fmt="png"))
 
     #########################
     # REPRESENT COLOR IN 3D #
     #########################
     #Convert the array_thickness to a vtkImageData
-    array=np.array(array_thickness)
+    array=np.array(array_thickness2)
     array_tmp=array.transpose(1, 2, 0)
     print("ORG: ",array.shape)
     print("ORG_TRSP: ",array_tmp.shape)
@@ -1029,8 +1032,8 @@ for opt in config[section]:
     # Convert the VTK array to vtkImageData
     img_vtk = vtk.vtkImageData()
     img_vtk.SetDimensions(array_tmp.shape)
-    img_vtk.SetSpacing(spacing)
-    img_vtk.SetOrigin(origin)
+    img_vtk.SetSpacing(spacing2)
+    img_vtk.SetOrigin(origin2aligned_oriented)
     img_vtk.GetPointData().SetScalars(vtk_data_array)
 
     print("VTK: ",img_vtk.GetDimensions())
@@ -1043,7 +1046,7 @@ for opt in config[section]:
     thickness=img_vtk
 
     surface = vtk.vtkMarchingCubes()
-    surface.SetInputData(imgstenc.GetOutput())
+    surface.SetInputData(imgstenc2aligned_oriented.GetOutput())
     surface.ComputeNormalsOn()
     surface.SetValue(0, 127.5)
 
@@ -1106,6 +1109,8 @@ for opt in config[section]:
     WriteImage(filename, renderWindow, rgba=False)
     cv_colors3D = cv.imread(resources_path+"colors3D.png")
     resized = cv.resize(cv_colors3D, (350,350), interpolation = cv.INTER_AREA)
-    logger.debug(VisualRecord("3D Bone thickness in colors", resized, fmt="png"))
-    #renderWindowInteractor.Start()
+    logger.debug(VisualRecord("3D Bone thickness in colors for bone: "+bone, resized, fmt="png"))
+    # Un comment those lines to get the 3D interactive view
+    # renderWindowInteractor.Start()
+    # input()
 
