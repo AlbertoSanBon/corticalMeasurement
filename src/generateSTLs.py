@@ -4,6 +4,7 @@ import numpy as np
 from vtk.util import numpy_support
 from vtk.util.numpy_support import vtk_to_numpy
 import matplotlib.pyplot as plt
+from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 from tqdm import tqdm
 from os import listdir
 from os.path import isfile, join
@@ -168,7 +169,18 @@ for i in onlyfiles_dicom:
     # (x,y),(X,Y),W,H=find_bounding_box(img, hu=True,threshold=50, display=True, sizex=8, sizey=8, linewidth=2,title=False)
 
     # Show bounding box detection of images
-    find_bounding_box_sample_stack(imgs_after_resamp, hu=True, show_box=True, threshold=threshold, rows=5, cols=5, start_with=1, show_every=5)
+    f=find_bounding_box_sample_stack(imgs_after_resamp, hu=True, show_box=True, threshold=threshold, rows=5, cols=5, start_with=1, show_every=5)
+    # Show bounding box detection of images
+    canvas = FigureCanvas(f)  # f es tu plt.figure
+    canvas.draw()  # Renderiza la figura
+    # Extrae los datos de la imagen como un array RGBA
+    image_array = np.frombuffer(canvas.buffer_rgba(), dtype='uint8')
+    width, height = canvas.get_width_height()
+    image_array = image_array.reshape((height, width, 4))  # Reorganiza en formato (alto, ancho, canales)
+    # Convierte la imagen a formato compatible con OpenCV (BGR)
+    image_bgr = cv2.cvtColor(image_array, cv2.COLOR_RGB2BGR)
+    resized = cv2.resize(image_bgr, (1020,1020), interpolation = cv2.INTER_AREA)
+    logger.debug(VisualRecord("Bounded Box IMAGE", resized, fmt="png"))
     
     # Calculate size for the spacing used. Reference 0.5 --> size=30
     auto_size = int(0.5*30/spacing[1])

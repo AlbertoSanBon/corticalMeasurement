@@ -253,8 +253,20 @@ def find_bounding_box(img, hu=True,threshold=200, display=True, sizex=5, sizey=5
     # get rectangle
     if len(contours)==0:
         return (0,0),(0,0),0, 0
-    x,y,w,h = cv2.boundingRect(contours[-1])
-    middle = img[y:y+h,x:x+w]
+    else:  
+        # Elijo el contorno más grande
+        area=0
+        for c in range(len(contours)):
+            x,y,w,h = cv2.boundingRect(contours[c])
+
+            if w*h>=area:
+                area=w*h
+                x_def=x
+                y_def=y
+                w_def=w
+                h_def=h
+                index=c
+        middle = img[y_def:y_def+h_def,x_def:x_def+w_def]
     
     if display:
         fig, ax = plt.subplots(1, 2, figsize=[sizex, sizey])
@@ -265,7 +277,7 @@ def find_bounding_box(img, hu=True,threshold=200, display=True, sizex=5, sizey=5
         ax[1].imshow(middle, cmap='gray')
         #plt.show()
     
-    return (x,y),(x+w,y+h),w, h
+    return (x_def,y_def),(x_def+w_def,y_def+h_def),w_def, h_def
 
 def find_bounding_box_sample_stack(img, hu=True, show_box=True, threshold=200, rows=10, cols=10, start_with=1, show_every=3, areamin=None):
     """
@@ -323,6 +335,7 @@ def find_bounding_box_sample_stack(img, hu=True, show_box=True, threshold=200, r
             count+=1
     #plt.show()
     print("Elapsed time: {} sec.".format(time.time()-t))  
+    return fig
     
 def make_bonesmask(img, kernel_preErosion, kernel_firstDilation, kernel_firstErosion, hu=True, threshold=200, display=False, extract=[], size=60, areamin=None):
     """
