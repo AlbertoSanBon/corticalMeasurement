@@ -334,8 +334,8 @@ for i in onlyfiles_dicom:
         
         #Save to STL in the output path
         writer = vtk.vtkSTLWriter()
-        writer.SetFileName(output_path+"\\stl\\"+"%s.stl" %(i))
-        #writer.SetFileName(output_path+"\\stl\\"+"leg%d.stl" %(id))
+        writer.SetFileName(output_path+"stl/"+"%s.stl" %(i))
+        #writer.SetFileName(output_path+"\\stl\\"+"%s.stl" %(i)) Para windows?
         stripper.Update()
         writer.SetInputData(stripper.GetOutput())
         writer.Write()
