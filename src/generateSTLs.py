@@ -88,15 +88,15 @@ onlyfiles_dicom = [f for f in listdir(data_path_dicom)]
 id=0
 
 # Examine each TAC
-for i in onlyfiles_dicom:
+for i in onlyfiles_dicom[id:]:
     
-    logger.debug(VisualRecord(">>> BONE:  %s" %(i)))
+    logger.debug(VisualRecord("NEW BONE:  %s" %(i)))
+    logger.debug(VisualRecord("========="))
     
     # Increase the value to identify the bone
     id+=1
     
-    #logger.debug(VisualRecord(">>> BONE FROM: %s" %(i) + ", BONE SAVED :leg%d " %(id)))
-    logger.debug(VisualRecord(">>> BONE FROM: %s" %(i) + ", BONE SAVED :%s " %(i)))
+    logger.debug(VisualRecord("BONE ID: %s" %id ))
     
     # Path of slices
     data_path = data_path_dicom+i
@@ -117,9 +117,12 @@ for i in onlyfiles_dicom:
         
     # Load images
     imgs_to_process = imgs
+    n_of_images=imgs_to_process.shape[0]
+    step=n_of_images//25
     
     # Show & log imgs_to_process
-    sample_stack(imgs_to_process, rows=5, cols=5, start_with=1, show_every=5)
+
+    sample_stack(imgs_to_process, rows=5, cols=5, start_with=1, show_every=step)
     plt.savefig(resources_path+"Sample_stack.png")
     cv_sample_stack = cv2.imread(resources_path+"Sample_stack.png")
     resized = cv2.resize(cv_sample_stack, (1020,1020), interpolation = cv2.INTER_AREA)
@@ -338,5 +341,4 @@ for i in onlyfiles_dicom:
         #writer.SetFileName(output_path+"\\stl\\"+"%s.stl" %(i)) Para windows?
         stripper.Update()
         writer.SetInputData(stripper.GetOutput())
-        writer.Write()
-    
+        writer.Write()    
