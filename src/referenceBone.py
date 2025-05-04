@@ -12,6 +12,7 @@ from vlogging import VisualRecord
 import math
 import os
 import pickle
+import datetime
 
 import cv2 as cv
 
@@ -59,9 +60,11 @@ resources_path = config.get('dicom', 'resources_path')
 ##########################
 # INITIALIZE LOGGER FILE #
 ##########################
+ct=datetime.datetime.now()
+sufix=ct.strftime("%Y-%m-%d_%H-%M-%S")
 
-logger = logging.getLogger("demo")
-fh = FileHandler('../logs/referenceBone.html', mode="w")
+logger = logging.getLogger("referenceBone")
+fh = FileHandler(f'../logs/referenceBone_{sufix}.html', mode="w")
 
 formatter = logging.Formatter('%(asctime)s | %(levelname)s | %(message)s', '%m-%d-%Y %H:%M:%S')
 fh.setFormatter(formatter)
@@ -154,7 +157,7 @@ np_scalars = np_scalars.reshape(dim[2], dim[1], dim[0])
 np_scalars = np_scalars.transpose(0,2,1)
 print("Shape: ",np_scalars.shape)
 
-sample_stack(np_scalars, rows=10, cols=10, start_with=1, show_every=7, color=False)
+sample_stack(np_scalars, rows=10, cols=10, start_with=1, show_every=np_scalars.shape[0]//100, color=False)
 
 array_thickness=[]
 array_contours=[]
@@ -167,7 +170,7 @@ for i in tqdm(range(len(np_scalars))):
     array_coordinates.append(coordinates)
     array_contourid.append(contourid)
     
-sample_stack(array_thickness, rows=10, cols=10, start_with=1, show_every=7, color=True, cmap="magma")
+sample_stack(array_thickness, rows=10, cols=10, start_with=1, show_every=array_thickness.shape[0]//100, color=True, cmap="magma")
 
 print("Max dimension in Z: ", bounds[5] - bounds[4])
 print("minz", bounds[4])
@@ -183,10 +186,17 @@ print("slice COM: ",sliceCOM)
 plt.imshow(array_thickness[sliceCOM],cmap="magma")
 
 #Save thickness to disk
-fname=reference_bone.split("\\")[-1].split(".")[0]
+#fname=reference_bone.split("\\")[-1].split(".")[0]  ##windows
+fname=reference_bone.split("/")[-1].split(".")[0] ##linux
 array=np.array(array_thickness)
-np.savez_compressed(output_path+"thickness\\"+fname, array)
-logger.debug(VisualRecord(">>> THICKNESS saved in:  %s" %(output_path+"thickness\\"+fname)))
+
+#windows
+#np.savez_compressed(output_path+"thickness\\"+fname, array)
+#logger.debug(VisualRecord(">>> THICKNESS saved in:  %s" %(output_path+"thickness\\"+fname))) 
+
+#linux
+np.savez_compressed(output_path+"thickness/"+fname, array)
+logger.debug(VisualRecord(">>> THICKNESS saved in:  %s" %(output_path+"thickness/"+fname))) 
 
 ####################################
 # REFERENCE VECTOR FOR ORIENTATION #
@@ -322,10 +332,18 @@ resized = cv.resize(cv_thickness, (500,500), interpolation = cv.INTER_AREA)
 logger.debug(VisualRecord("1D Thickness Contours", resized, fmt="png"))
 
 #Save thickness dictionary profiles to disk
-fname=reference_bone.split("\\")[-1].split(".")[0]
-with open(output_path+"profiles\\"+fname+".pkl", 'wb') as handle:
+
+#WINDOWS
+#fname=reference_bone.split("\\")[-1].split(".")[0]  
+#with open(output_path+"profiles\\"+fname+".pkl", 'wb') as handle:  
+#     pickle.dump(profiles, handle, protocol=pickle.HIGHEST_PROTOCOL)  
+#logger.debug(VisualRecord(">>> PROFILES DICTIONARY saved in:  %s" %(output_path+"profiles\\"+fname+".pkl"))) 
+
+#LINUX
+fname=reference_bone.split("/")[-1].split(".")[0] ##linux
+with open(output_path+"profiles/"+fname+".pkl", 'wb') as handle:
      pickle.dump(profiles, handle, protocol=pickle.HIGHEST_PROTOCOL)
-logger.debug(VisualRecord(">>> PROFILES DICTIONARY saved in:  %s" %(output_path+"profiles\\"+fname+".pkl")))
+logger.debug(VisualRecord(">>> PROFILES DICTIONARY saved in:  %s" %(output_path+"profiles/"+fname+".pkl")))
 
 
 #############################

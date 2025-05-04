@@ -15,6 +15,7 @@ import cv2
 import math
 from scipy.ndimage import rotate
 import os
+import datetime
 # import vg
 
 import sys
@@ -65,8 +66,11 @@ convert_stl = config.getboolean('post-process', 'convert_stl')
 # INITIALIZE LOGGER FILE #
 ##########################
 
+ct=datetime.datetime.now()
+sufix=ct.strftime("%Y-%m-%d_%H-%M-%S")
+
 logger = logging.getLogger("generateSTLs")
-fh = FileHandler('../logs/generateSTLs.html', mode="w")
+fh = FileHandler(f'../logs/generateSTLs_{sufix}.html', mode="w")
 
 formatter = logging.Formatter('%(asctime)s | %(levelname)s | %(message)s', '%m-%d-%Y %H:%M:%S')
 fh.setFormatter(formatter)
@@ -172,7 +176,7 @@ for i in onlyfiles_dicom[id:]:
     # (x,y),(X,Y),W,H=find_bounding_box(img, hu=True,threshold=50, display=True, sizex=8, sizey=8, linewidth=2,title=False)
 
     # Show bounding box detection of images
-    f=find_bounding_box_sample_stack(imgs_after_resamp, hu=True, show_box=True, threshold=threshold, rows=5, cols=5, start_with=1, show_every=5)
+    f=find_bounding_box_sample_stack(imgs_after_resamp, hu=True, show_box=True, threshold=threshold, rows=5, cols=5, start_with=1, show_every=imgs_after_resamp.shape[0]//25)
     # Show bounding box detection of images
     canvas = FigureCanvas(f)  # f es tu plt.figure
     canvas.draw()  # Renderiza la figura
@@ -207,21 +211,21 @@ for i in onlyfiles_dicom[id:]:
 
     
     # Show & log masked bones
-    sample_stack(masked_bones, rows=5, cols=5, start_with=1, show_every=5)
+    sample_stack(masked_bones, rows=5, cols=5, start_with=1, show_every=masked_bones.shape[0]//25)
     plt.savefig(resources_path+"Sample_stack.png")
     cv_sample_stack = cv2.imread(resources_path+"Sample_stack.png")
     resized = cv2.resize(cv_sample_stack, (1020,1020), interpolation = cv2.INTER_AREA)
     logger.debug(VisualRecord("Masked bone", resized, fmt="png"))
     
     # Show & log masks
-    sample_stack(masks, rows=5, cols=5, start_with=1, show_every=5)
+    sample_stack(masks, rows=5, cols=5, start_with=1, show_every=masks.shape[0]//25)
     plt.savefig(resources_path+"Sample_stack.png")
     cv_sample_stack = cv2.imread(resources_path+"Sample_stack.png")
     resized = cv2.resize(cv_sample_stack, (1020,1020), interpolation = cv2.INTER_AREA)
     logger.debug(VisualRecord("Masks", resized, fmt="png"))
     
     # Show & log labels of the mask
-    sample_stack(labels, rows=5, cols=5, start_with=1, show_every=5, color=True)
+    sample_stack(labels, rows=5, cols=5, start_with=1, show_every=labels.shape[0]//25, color=True)
     plt.savefig(resources_path+"Sample_stack.png")
     cv_sample_stack = cv2.imread(resources_path+"Sample_stack.png")
     resized = cv2.resize(cv_sample_stack, (1020,1020), interpolation = cv2.INTER_AREA)
@@ -337,8 +341,10 @@ for i in onlyfiles_dicom[id:]:
         
         #Save to STL in the output path
         writer = vtk.vtkSTLWriter()
+        #linux
         writer.SetFileName(output_path+"stl/"+"%s.stl" %(i))
-        #writer.SetFileName(output_path+"\\stl\\"+"%s.stl" %(i)) Para windows?
+        #windows
+        #writer.SetFileName(output_path+"\\stl\\"+"%s.stl" %(i))
         stripper.Update()
         writer.SetInputData(stripper.GetOutput())
         writer.Write()    

@@ -16,6 +16,7 @@ import cv2 as cv
 from scipy.ndimage import rotate
 import os
 import pickle
+import datetime
 
 import sys
 sys.path.append("../libs")
@@ -65,8 +66,11 @@ vector1normal = json.loads(vector1normal)
 # INITIALIZE LOGGER FILE #
 ##########################
 
+ct=datetime.datetime.now()
+sufix=ct.strftime("%Y-%m-%d_%H-%M-%S")
+
 logger = logging.getLogger("demo2")
-fh = FileHandler('../logs/corrections&Thickness.html', mode="w")
+fh = FileHandler(f'../logs/corrections&Thickness_{sufix}.html', mode="w")
 
 formatter = logging.Formatter('%(asctime)s | %(levelname)s | %(message)s', '%m-%d-%Y %H:%M:%S')
 fh.setFormatter(formatter)
@@ -163,7 +167,8 @@ image=np_scalars[sliceCOM,:,:]
 ##################
 
 # List ALL STLs 
-output_path_stl = output_path+"\\stl\\"
+#output_path_stl = output_path+"\\stl\\" #windows
+output_path_stl = output_path+"/stl/" #linux
 onlyfiles_stl = [f for f in listdir(output_path_stl)] 
 
 
@@ -857,8 +862,9 @@ for bone in onlyfiles_stl:
         np_scalars2_aligned_oriented = np_scalars2_aligned_oriented.reshape(dim2[2], dim2[1], dim2[0]) 
         np_scalars2_aligned_oriented = np_scalars2_aligned_oriented.transpose(0,2,1)
         print("Shape: ",np_scalars2_aligned_oriented.shape)
+        shape=np_scalars2_aligned_oriented.shape[0]
         
-        sample_stack(np_scalars2_aligned_oriented, rows=10, cols=10, start_with=1, show_every=6, color=False)
+        sample_stack(np_scalars2_aligned_oriented, rows=10, cols=10, start_with=1, show_every=shape//100, color=False)
         
         array_thickness2=[]
         array_contours2=[]
@@ -936,8 +942,12 @@ for bone in onlyfiles_stl:
         #STEP SIX: 
             # Plot3D
         array2=np.array(array_thickness2)
-        np.savez_compressed(output_path+"thickness\\"+bone.split(".")[0], array2)
-        logger.debug(VisualRecord(">>> THICKNESS saved in:  %s" %(output_path+"thickness\\"+bone.split(".")[0])))
+        #windows
+        #np.savez_compressed(output_path+"thickness\\"+bone.split(".")[0], array2)
+        #logger.debug(VisualRecord(">>> THICKNESS saved in:  %s" %(output_path+"thickness\\"+bone.split(".")[0])))
+        #linux
+        np.savez_compressed(output_path+"thickness/"+bone.split(".")[0], array2)
+        logger.debug(VisualRecord(">>> THICKNESS saved in:  %s" %(output_path+"thickness/"+bone.split(".")[0])))
         
         array_tmp2=array2.transpose(1, 2, 0)
         
@@ -1065,9 +1075,14 @@ for bone in onlyfiles_stl:
         cv_thickness = cv.imread(resources_path+"Thickness.png")
         resized = cv.resize(cv_thickness, (500,500), interpolation = cv.INTER_AREA)
         logger.debug(VisualRecord("1D Thickness Contours for bone: "+bone, resized, fmt="png"))
-        with open(output_path+"profiles\\"+bone.split(".")[0]+".pkl", 'wb') as handle:
+        #windows
+        #with open(output_path+"profiles\\"+bone.split(".")[0]+".pkl", 'wb') as handle:
+        #     pickle.dump(profiles, handle, protocol=pickle.HIGHEST_PROTOCOL)
+        #logger.debug(VisualRecord(">>> PROFILES DICTIONARY saved in:  %s" %(output_path+"profiles\\"+bone.split(".")[0]+".pkl")))
+        #linux
+        with open(output_path+"profiles/"+bone.split(".")[0]+".pkl", 'wb') as handle:
              pickle.dump(profiles, handle, protocol=pickle.HIGHEST_PROTOCOL)
-        logger.debug(VisualRecord(">>> PROFILES DICTIONARY saved in:  %s" %(output_path+"profiles\\"+bone.split(".")[0]+".pkl")))
+        logger.debug(VisualRecord(">>> PROFILES DICTIONARY saved in:  %s" %(output_path+"profiles/"+bone.split(".")[0]+".pkl")))
         
         # Show the cuts generated in 2D
         show_cuts(array_thickness2, cortes, num_views, spacing2, origin2aligned_oriented)
