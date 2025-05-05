@@ -77,6 +77,16 @@ logger.addHandler(fh)
 # OBTAIN REFERENCE VECTORS #
 ############################
 logger.debug(VisualRecord(">>> REFERENCE BONE IS:  %s" %(reference_bone)))
+reference_bone_fn=reference_bone.split("/")[-1]
+
+#load reference leg side
+#linux
+side_path=output_path+"side/"+f"{reference_bone_fn.replace('.stl','')}.txt"
+#windows
+#side_path=output_path+"\\side\\"+f"{reference_bone_fn.replace('.stl','')}.txt"  
+with open(side_path,"r") as f:
+    referencelegside=f.read()    
+logger.debug(VisualRecord(">>> REFERENCE BONE SIDE IS:  %s" %(referencelegside)))
 
 reader = vtk.vtkSTLReader()
 reader.SetFileName(reference_bone)
@@ -170,7 +180,7 @@ for i in tqdm(range(len(np_scalars))):
     array_coordinates.append(coordinates)
     array_contourid.append(contourid)
     
-sample_stack(array_thickness, rows=10, cols=10, start_with=1, show_every=array_thickness.shape[0]//100, color=True, cmap="magma")
+sample_stack(array_thickness, rows=10, cols=10, start_with=1, show_every=len(array_thickness)//100, color=True, cmap="magma")
 
 print("Max dimension in Z: ", bounds[5] - bounds[4])
 print("minz", bounds[4])
