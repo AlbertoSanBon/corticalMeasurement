@@ -238,13 +238,19 @@ for i in onlyfiles_dicom[id:]:
         labels =[]
             
         # Obtain masked bones, masks and labels of the masks
-        counter=0
         for img in tqdm(imgs_after_resamp):
-            mascara,imagen_norm,imagen_hu,etiquetas=make_bonesmask(img, kernel_preErosion, kernel_firstDilation, kernel_firstErosion, hu=True, threshold=threshold, display=False, extract=extract, size=size)
-            masked_bones.append(imagen_norm)
-            masked_bones_hu.append(imagen_hu)
-            masks.append(mascara)
-            labels.append(etiquetas)
+            if sum(sum(img))!=0: # si la imagen es completamente negra para evitar que de fallo el KMEANS
+                mascara,imagen_norm,imagen_hu,etiquetas=make_bonesmask(img, kernel_preErosion, kernel_firstDilation, kernel_firstErosion, hu=True, threshold=threshold, display=False, extract=extract, size=size)
+                masked_bones.append(imagen_norm)
+                masked_bones_hu.append(imagen_hu)
+                masks.append(mascara)
+                labels.append(etiquetas)
+            else:
+                # cuando la imagen es completamente negra la usamos para actualizar las listas tal cual
+                masked_bones.append(img)
+                masked_bones_hu.append(img)
+                masks.append(img)
+                labels.append(img)
 
         
         # Show & log masked bones
