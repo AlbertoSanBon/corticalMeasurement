@@ -586,7 +586,7 @@ for bone in onlyfiles_stl:
             """
 
             # If the leg side between reference and processed leg is different, then change_leg = True
-            if referencelegside != legside:
+            if legside in ["left","right"] and referencelegside != legside:
                 change_leg = True
                 logger.debug(VisualRecord("FIX LEG DIFFERENCE"))
             else:

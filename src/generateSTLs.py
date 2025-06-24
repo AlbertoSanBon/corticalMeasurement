@@ -137,18 +137,21 @@ for i in onlyfiles_dicom[id:]:
         ds=slices[0]
         tag = (0x0032, 0x1060) #procedure tag
         requested_procedure_description = ds.get(tag, None)
-        text=requested_procedure_description.value
         if requested_procedure_description is not None:
+            text=requested_procedure_description.value
             print("{0:35}- {1:20}".format(i,text))
             logger.debug(VisualRecord("{0:35}- {1:20}".format(i,text)))
         else:
             print("El tag (0032,1060) no está presente en el dataset.")
             logger.debug(VisualRecord("El tag (0032,1060) no está presente en el dataset"))
+            text="unkown"
         
         if "right" in text.lower():
             legside="right"
-        else:
+        elif "left" in text.lower():
             legside="left"
+        else:
+            legside="unkown"
         
         # Create a numpy matrix of Hounsfield Units (HU)
         imgs = get_pixels_hu(slices)
