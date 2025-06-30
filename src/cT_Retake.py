@@ -81,6 +81,16 @@ thickness_spacing2 = spacing_n[2]                     # 0.25
 ##################
 
 logger.debug(VisualRecord(">>> REFERENCE BONE IS:  %s" %(reference_bone)))
+reference_bone_fn=reference_bone.split("/")[-1]
+
+#load reference leg side
+#linux
+side_path=output_path+"side/"+f"{reference_bone_fn.replace('.stl','')}.txt"
+#windows
+#side_path=output_path+"\\side\\"+f"{reference_bone_fn.replace(".stl","")}.txt"  
+with open(side_path,"r") as f:
+    referencelegside=f.read()    
+logger.debug(VisualRecord(">>> REFERENCE BONE SIDE IS:  %s" %(referencelegside)))
 
 # Obtain the poly data of the reference bone
 reader = vtk.vtkSTLReader()
@@ -180,7 +190,10 @@ for opt in config[section]:
         Correct_direction_manually = True
         
     # List ALL STLs 
-    output_path_stl = output_path+"\\stl\\"
+    #windows
+    #output_path_stl = output_path+"\\stl\\"
+    #linux
+    output_path_stl = output_path+"/stl/"
     onlyfiles_stl = [f for f in listdir(output_path_stl)] 
     
     # Find bone and operate
@@ -192,6 +205,7 @@ for opt in config[section]:
         
     # Perform correction for retake bones
     logger.debug(VisualRecord(">>> RETAKE FOR BONE:  %s" %(bone)))
+    logger.debug(VisualRecord(">>> CORRECTIONS:  LegSide:%s   PCA_Direction:%s" %(change_leg,Correct_direction_manually)))
     
     reader2 = vtk.vtkSTLReader()
     reader2.SetFileName(output_path_stl+bone) 
@@ -868,8 +882,12 @@ for opt in config[section]:
     #STEP SIX: 
         # Plot3D
     array2=np.array(array_thickness2)
-    np.savez_compressed(output_path+"thickness\\"+bone.split(".")[0], array2)
-    logger.debug(VisualRecord(">>> THICKNESS saved in:  %s" %(output_path+"thickness\\"+bone.split(".")[0])))
+    #windows
+    #np.savez_compressed(output_path+"thickness\\"+bone.split(".")[0], array2)
+    #logger.debug(VisualRecord(">>> THICKNESS saved in:  %s" %(output_path+"thickness\\"+bone.split(".")[0])))
+    #linux
+    np.savez_compressed(output_path+"thickness/"+bone.split(".")[0], array2)
+    logger.debug(VisualRecord(">>> THICKNESS saved in:  %s" %(output_path+"thickness/"+bone.split(".")[0])))
     array_tmp2=array2.transpose(1, 2, 0)
     
     
@@ -994,10 +1012,16 @@ for opt in config[section]:
     plt.savefig(resources_path+"Thickness.png")
     cv_thickness = cv.imread(resources_path+"Thickness.png")
     resized = cv.resize(cv_thickness, (500,500), interpolation = cv.INTER_AREA)
+    
     logger.debug(VisualRecord("1D Thickness Contours for bone: "+bone, resized, fmt="png"))
-    with open(output_path+"profiles\\"+bone.split(".")[0]+".pkl", 'wb') as handle:
+    #windows
+    #with open(output_path+"profiles\\"+bone.split(".")[0]+".pkl", 'wb') as handle:
+    #     pickle.dump(profiles, handle, protocol=pickle.HIGHEST_PROTOCOL)
+    #logger.debug(VisualRecord(">>> PROFILES DICTIONARY saved in:  %s" %(output_path+"profiles\\"+bone.split(".")[0]+".pkl")))
+    #linux
+    with open(output_path+"profiles/"+bone.split(".")[0]+".pkl", 'wb') as handle:
         pickle.dump(profiles, handle, protocol=pickle.HIGHEST_PROTOCOL)
-    logger.debug(VisualRecord(">>> PROFILES DICTIONARY saved in:  %s" %(output_path+"profiles\\"+bone.split(".")[0]+".pkl")))
+    logger.debug(VisualRecord(">>> PROFILES DICTIONARY saved in:  %s" %(output_path+"profiles/"+bone.split(".")[0]+".pkl")))
     
     
     # Show the cuts generated in 2D
