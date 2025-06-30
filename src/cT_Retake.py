@@ -465,8 +465,9 @@ for opt in config[section]:
     np_scalars2aligned = np_scalars2aligned.reshape(dim2[2], dim2[1], dim2[0]) 
     np_scalars2aligned = np_scalars2aligned.transpose(0,2,1)
     print("Shape: ",np_scalars2aligned.shape)
-    
-    #sample_stack(np_scalars2aligned, rows=10, cols=10, start_with=1, show_every=6, color=False)
+
+    #n,_,_= np_scalars2aligned.shape
+    #sample_stack(np_scalars2aligned, rows=10, cols=n//60, start_with=1, show_every=6, color=False)
 
     
     #THIRD STEP: 
@@ -804,13 +805,14 @@ for opt in config[section]:
     np_scalars2_aligned_oriented = np_scalars2_aligned_oriented.transpose(0,2,1)
     print("Shape: ",np_scalars2_aligned_oriented.shape)
     
-    sample_stack(np_scalars2_aligned_oriented, rows=10, cols=10, start_with=1, show_every=6, color=False)
+    n,_,_= np_scalars2_aligned_oriented.shape
+    sample_stack(np_scalars2_aligned_oriented, rows=10, cols=n//60, start_with=1, show_every=6, color=False)
     
     array_thickness2=[]
     array_contours2=[]
     array_coordinates2=[]
     array_contourid2=[]
-    for i in tqdm(range(len(np_scalars2))):
+    for i in tqdm(range(len(np_scalars2_aligned_oriented))):
         contourid2,coordinates2, contour2,thick2=compute_thickness_image(np_scalars2_aligned_oriented[i,:,:],contourid=-1,grow=False)
         array_thickness2.append(thick2*thickness_spacing2)
         array_contours2.append(contour2)
